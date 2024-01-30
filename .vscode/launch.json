@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<foodsustainability>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.foodsustainability.Application",
+            "projectName": "foodsustainability",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

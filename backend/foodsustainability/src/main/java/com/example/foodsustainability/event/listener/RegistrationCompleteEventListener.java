@@ -1,0 +1,71 @@
+package com.example.foodsustainability.event.listener;
+
+import java.io.UnsupportedEncodingException;
+import java.util.UUID;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationListener;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
+
+import com.example.foodsustainability.event.RegistrationCompleteEvent;
+import com.example.foodsustainability.user.User;
+import com.example.foodsustainability.user.UserService;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class RegistrationCompleteEventListener implements ApplicationListener<RegistrationCompleteEvent> {
+    private final UserService userService;
+
+    private final JavaMailSender mailSender;
+    private User theUser;
+
+    @Override
+    public void onApplicationEvent(RegistrationCompleteEvent event) {
+        System.out.println("Here in eventlistener on event 00: " + event);
+        // 1. Get the newly registered user
+        theUser = event.getUser();
+        System.out.println("Here in eventlistener on event 11: " + theUser);
+        // 2. Create a verification token for the user
+        String verificationToken = UUID.randomUUID().toString();
+        System.out.println("Here in eventlistener on event 22: " + verificationToken);
+        // 3. Save the verification token for the user
+        userService.saveUserVerificationToken(theUser, verificationToken);
+        System.out.println("Here in eventlistener on event 33: ");
+        // 4 Build the verification url to be sent to the user
+        String url = event.getApplicationUrl() + "/register/verifyEmail?token=" + verificationToken;
+        System.out.println("Here in eventlistener on event 44: " + url);
+        // 5. Send the email.
+        try {
+            sendVerificationEmail(url);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("Click the link to verify your registration :  {}", url);
+    }
+
+    public void sendVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException {
+        System.out.println("Here in eventlistener send email:");
+        String subject = "Email Verification";
+        String senderName = "User Registration Portal Service";
+        String mailContent = "<p> Hi, " + theUser.getFirstName() + ", </p>" +
+                "<p>Thank you for registering with us," + "" +
+                "Please, follow the link below to complete your registration.</p>" +
+                "<a href=\"" + url + "\">Verify your email to activate your account</a>" +
+                "<p> Thank you <br> Users Registration Portal Service";
+        MimeMessage message = mailSender.createMimeMessage();
+        var messageHelper = new MimeMessageHelper(message);
+        messageHelper.setFrom("heejuk.dev@gmail.com", senderName);
+        messageHelper.setTo(theUser.getEmail());
+        messageHelper.setSubject(subject);
+        messageHelper.setText(mailContent, true);
+        System.out.println("Here in eventlistener send email SET:");
+        mailSender.send(message);
+        System.out.println("Here in eventlistener send email: SENT");
+
+    }
+}
