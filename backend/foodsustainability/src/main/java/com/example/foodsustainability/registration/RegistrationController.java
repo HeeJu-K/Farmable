@@ -29,7 +29,6 @@ public class RegistrationController {
 
     @PostMapping
     public String registerUser(@RequestBody RegistrationRequest registrationRequest, final HttpServletRequest request) {
-        System.out.println("Received registration request: " + registrationRequest);
         User user = userService.registerUser(registrationRequest);
         // publish registration event
         publisher.publishEvent(new RegistrationCompleteEvent(user, applicationUrl(request)));

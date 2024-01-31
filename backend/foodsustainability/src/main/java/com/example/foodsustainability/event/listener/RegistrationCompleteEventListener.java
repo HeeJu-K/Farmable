@@ -26,19 +26,14 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {
-        System.out.println("Here in eventlistener on event 00: " + event);
         // 1. Get the newly registered user
         theUser = event.getUser();
-        System.out.println("Here in eventlistener on event 11: " + theUser);
         // 2. Create a verification token for the user
         String verificationToken = UUID.randomUUID().toString();
-        System.out.println("Here in eventlistener on event 22: " + verificationToken);
         // 3. Save the verification token for the user
         userService.saveUserVerificationToken(theUser, verificationToken);
-        System.out.println("Here in eventlistener on event 33: ");
         // 4 Build the verification url to be sent to the user
         String url = event.getApplicationUrl() + "/register/verifyEmail?token=" + verificationToken;
-        System.out.println("Here in eventlistener on event 44: " + url);
         // 5. Send the email.
         try {
             sendVerificationEmail(url);
@@ -49,7 +44,6 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     }
 
     public void sendVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException {
-        System.out.println("Here in eventlistener send email:");
         String subject = "Email Verification";
         String senderName = "User Registration Portal Service";
         String mailContent = "<p> Hi, " + theUser.getFirstName() + ", </p>" +
@@ -63,9 +57,6 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         messageHelper.setTo(theUser.getEmail());
         messageHelper.setSubject(subject);
         messageHelper.setText(mailContent, true);
-        System.out.println("Here in eventlistener send email SET:");
         mailSender.send(message);
-        System.out.println("Here in eventlistener send email: SENT");
-
     }
 }

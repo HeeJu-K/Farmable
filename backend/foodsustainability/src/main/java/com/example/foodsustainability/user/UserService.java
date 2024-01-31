@@ -46,7 +46,6 @@ public class UserService implements IUserService {
 
     @Override
     public User registerUser(RegistrationRequest request) {
-        System.out.println("here in user service: " + request);
         Optional<User> appUser = this.findByEmail(request.email());
         if (appUser.isPresent()) {
             throw new UserAlreadyExistException(
@@ -71,7 +70,6 @@ public class UserService implements IUserService {
     public void saveUserVerificationToken(User theUser, String token) {
         VerificationToken verificationToken = new VerificationToken(token, theUser);
         tokenRepository.save(verificationToken);
-        System.out.println("Here in user service save token 222: SAVED");
     }
 
     @Override
