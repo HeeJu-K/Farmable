@@ -27,7 +27,11 @@ import com.azure.spring.data.cosmos.core.ResponseDiagnosticsProcessor;
 import com.azure.spring.data.cosmos.repository.config.EnableCosmosRepositories;
 
 @Configuration
-@EnableCosmosRepositories(basePackages = {"com.example.foodsustainability.user", "com.example.foodsustainability.registration.token"})
+@EnableCosmosRepositories(basePackages = {
+    "com.example.foodsustainability.user", 
+    "com.example.foodsustainability.registration.token", 
+    "com.example.foodsustainability.restaurant"
+})
 public class FoodSustainabilityAppConfiguration extends AbstractCosmosConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FoodSustainabilityAppConfiguration.class);

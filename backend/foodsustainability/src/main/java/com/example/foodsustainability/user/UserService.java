@@ -2,6 +2,7 @@ package com.example.foodsustainability.user;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,15 +29,15 @@ public class UserService implements IUserService {
 
     // @Autowired
     // public UserService(
-    //     UserRepository userRepository, 
-    //     PasswordEncoder passwordEncoder,
-    //     VerificationTokenRepository tokenRepository
-    //     ) {
-    //     this.userRepository = userRepository;
-    //     this.passwordEncoder = passwordEncoder;
-    //     this.tokenRepository = tokenRepository;
+    // UserRepository userRepository,
+    // PasswordEncoder passwordEncoder,
+    // VerificationTokenRepository tokenRepository
+    // ) {
+    // this.userRepository = userRepository;
+    // this.passwordEncoder = passwordEncoder;
+    // this.tokenRepository = tokenRepository;
     // }
-    
+
     @Override
     public List<User> getUsers() {
         return List.copyOf(StreamSupport.stream(userRepository.findAll().spliterator(), false)
@@ -49,7 +50,7 @@ public class UserService implements IUserService {
         Optional<User> appUser = this.findByEmail(request.email());
         if (appUser.isPresent()) {
             throw new UserAlreadyExistException(
-                "User with email " + request.email() + "alrady exists");
+                    "User with email " + request.email() + "alrady exists");
         }
         User newUser = new User();
         newUser.setId(UUID.randomUUID().toString());
@@ -67,6 +68,17 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User updateUser(RegistrationRequest request) {
+        User user = findByEmail(request.email())
+                .orElseThrow(() -> new NoSuchElementException("No user found with the email: " + request.email()));
+        user.setProfileUrl(request.profileUrl());
+        user.setSize(request.size());
+        user.setAddress(request.address());
+        user.setName(request.name());
+        return userRepository.save(user); 
+    }
+
+    @Override
     public void saveUserVerificationToken(User theUser, String token) {
         VerificationToken verificationToken = new VerificationToken(token, theUser);
         tokenRepository.save(verificationToken);
@@ -76,7 +88,7 @@ public class UserService implements IUserService {
     public String validateToken(String theToken) {
         VerificationToken token = tokenRepository.findByToken(theToken);
 
-        if(token == null) {
+        if (token == null) {
             return "Invalid verification token";
         }
 
@@ -90,6 +102,5 @@ public class UserService implements IUserService {
         userRepository.save(user);
         return "valid";
     }
-
 
 }

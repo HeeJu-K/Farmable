@@ -5,6 +5,10 @@ public record RegistrationRequest(
     String lastName,
     String email,
     String password,
-    String role) {
+    String role, 
+    String profileUrl, // image url address for profile picture
+    String size,
+    String address,
+    String name) {
 
 }

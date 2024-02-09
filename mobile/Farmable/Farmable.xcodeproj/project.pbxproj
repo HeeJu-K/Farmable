@@ -7,16 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52374B6A2B71872800F87663 /* Farmer_Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B692B71872800F87663 /* Farmer_Inventory.swift */; };
+		52374B6C2B71873900F87663 /* Farmer_Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B6B2B71873900F87663 /* Farmer_Profile.swift */; };
+		52374B6E2B71874800F87663 /* Restaurant_Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B6D2B71874800F87663 /* Restaurant_Inventory.swift */; };
+		52374B702B71875600F87663 /* Restaurant_Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B6F2B71875600F87663 /* Restaurant_Profile.swift */; };
+		52374B722B71879400F87663 /* Farmer_Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B712B71879400F87663 /* Farmer_Order.swift */; };
+		52374B742B718A7E00F87663 /* NavbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B732B718A7E00F87663 /* NavbarView.swift */; };
+		52374B762B718F4A00F87663 /* LoginTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B752B718F4A00F87663 /* LoginTab.swift */; };
 		52507F892B5E54C800B75678 /* FarmableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52507F882B5E54C800B75678 /* FarmableApp.swift */; };
-		52507F8B2B5E54C800B75678 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52507F8A2B5E54C800B75678 /* ContentView.swift */; };
+		52507F8B2B5E54C800B75678 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52507F8A2B5E54C800B75678 /* LoginPage.swift */; };
 		52507F8D2B5E54C900B75678 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52507F8C2B5E54C900B75678 /* Assets.xcassets */; };
 		52507F902B5E54C900B75678 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52507F8F2B5E54C900B75678 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		52374B692B71872800F87663 /* Farmer_Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farmer_Inventory.swift; sourceTree = "<group>"; };
+		52374B6B2B71873900F87663 /* Farmer_Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farmer_Profile.swift; sourceTree = "<group>"; };
+		52374B6D2B71874800F87663 /* Restaurant_Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant_Inventory.swift; sourceTree = "<group>"; };
+		52374B6F2B71875600F87663 /* Restaurant_Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant_Profile.swift; sourceTree = "<group>"; };
+		52374B712B71879400F87663 /* Farmer_Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farmer_Order.swift; sourceTree = "<group>"; };
+		52374B732B718A7E00F87663 /* NavbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavbarView.swift; sourceTree = "<group>"; };
+		52374B752B718F4A00F87663 /* LoginTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTab.swift; sourceTree = "<group>"; };
 		52507F852B5E54C800B75678 /* Farmable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Farmable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52507F882B5E54C800B75678 /* FarmableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmableApp.swift; sourceTree = "<group>"; };
-		52507F8A2B5E54C800B75678 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		52507F8A2B5E54C800B75678 /* LoginPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPage.swift; sourceTree = "<group>"; };
 		52507F8C2B5E54C900B75678 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		52507F8F2B5E54C900B75678 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -32,6 +46,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		52374B682B7186EF00F87663 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				52374B692B71872800F87663 /* Farmer_Inventory.swift */,
+				52374B6B2B71873900F87663 /* Farmer_Profile.swift */,
+				52374B6D2B71874800F87663 /* Restaurant_Inventory.swift */,
+				52374B6F2B71875600F87663 /* Restaurant_Profile.swift */,
+				52374B712B71879400F87663 /* Farmer_Order.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		52507F7C2B5E54C800B75678 = {
 			isa = PBXGroup;
 			children = (
@@ -51,8 +77,11 @@
 		52507F872B5E54C800B75678 /* Farmable */ = {
 			isa = PBXGroup;
 			children = (
+				52374B682B7186EF00F87663 /* Views */,
 				52507F882B5E54C800B75678 /* FarmableApp.swift */,
-				52507F8A2B5E54C800B75678 /* ContentView.swift */,
+				52507F8A2B5E54C800B75678 /* LoginPage.swift */,
+				52374B752B718F4A00F87663 /* LoginTab.swift */,
+				52374B732B718A7E00F87663 /* NavbarView.swift */,
 				52507F8C2B5E54C900B75678 /* Assets.xcassets */,
 				52507F8E2B5E54C900B75678 /* Preview Content */,
 			);
@@ -137,7 +166,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52507F8B2B5E54C800B75678 /* ContentView.swift in Sources */,
+				52374B742B718A7E00F87663 /* NavbarView.swift in Sources */,
+				52374B722B71879400F87663 /* Farmer_Order.swift in Sources */,
+				52374B6E2B71874800F87663 /* Restaurant_Inventory.swift in Sources */,
+				52374B6C2B71873900F87663 /* Farmer_Profile.swift in Sources */,
+				52507F8B2B5E54C800B75678 /* LoginPage.swift in Sources */,
+				52374B6A2B71872800F87663 /* Farmer_Inventory.swift in Sources */,
+				52374B762B718F4A00F87663 /* LoginTab.swift in Sources */,
+				52374B702B71875600F87663 /* Restaurant_Profile.swift in Sources */,
 				52507F892B5E54C800B75678 /* FarmableApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
