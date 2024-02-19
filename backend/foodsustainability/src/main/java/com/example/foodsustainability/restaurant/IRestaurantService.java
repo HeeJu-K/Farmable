@@ -9,8 +9,10 @@ public interface IRestaurantService {
     void deleteMenu(MenuRequest request);
     Menu updateMenu(MenuRequest request);
     Optional<Menu> findByDishName(String dishName);
-    Optional<Menu> getMenuDetails(MenuRequest request);
-}
 
-// addMenu, deleteMenu, updateMenu, getMenu(), getMenus, 
-// addItem, reduceItem, getItem, getItems
+    List <Grocery> getGroceries();
+    Grocery addGrocery(GroceryRequest request);
+    void deleteGrocery(GroceryRequest request);
+    Grocery updateGrocery(GroceryRequest request);
+    Optional<Grocery> findByGroceryName(String groceryName);
+}

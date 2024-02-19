@@ -1,21 +1,19 @@
-package com.example.foodsustainability.restaurant;
+package com.example.foodsustainability.farm;
 
 import org.springframework.data.annotation.Id;
-import com.azure.spring.data.cosmos.core.mapping.Container;
+
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
 
-@Container(containerName = "grocery")
-public class Grocery {
+public class Produce {
     @Id
     private String id;
     @PartitionKey
-    private String groceryName;
+    private String produceName;
     private String quantity;
     private String harvestTime;
     private String price;
-    private String originFarm;
 
-    public Grocery() {
+    public Produce() {
         
     }
 
@@ -27,12 +25,12 @@ public class Grocery {
         this.id = id;
     }
 
-    public String getGroceryName() {
-        return groceryName;
+    public String getProduceName() {
+        return produceName;
     }
 
-    public void setGroceryName(String groceryName) {
-        this.groceryName = groceryName;
+    public void setProduceName(String produceName) {
+        this.produceName = produceName;
     }
 
     public String getQuantity() {
@@ -57,13 +55,5 @@ public class Grocery {
 
     public void setPrice(String price) {
         this.price = price;
-    }
-
-    public String getOriginFarm() {
-        return originFarm;
-    }
-
-    public void setOriginFarm(String originFarm) {
-        this.originFarm = originFarm;
     }
 }

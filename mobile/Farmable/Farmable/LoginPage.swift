@@ -17,8 +17,15 @@ struct LoginPage: View {
     @State private var password = ""
     @State private var wrongUsername = 0
     @State private var wrongPassword = 0
-    @State private var showingLoginScreen = false
+    @State private var isNavigate = false
     @State private var selectedTab: Int = 0 //0: farmer, 1: restaurant
+    private var destinationView: some View {
+           switch selectedTab {
+               case 0: return AnyView(FarmerView())
+               case 1: return AnyView(RestaurantView())
+               default: return AnyView(Text("Unknown Destination"))
+           }
+       }
     
     var body: some View {
         
@@ -80,32 +87,9 @@ struct LoginPage: View {
                     .background(Color.green)
                     .cornerRadius(10)
                     
-//                    NavigationLink(destination: NavbarView()) {
-//                        EmptyView()
-//                    }
-                                    
-                    // Conditional navigation links based on selected tab
-                    NavigationLink(value: TabSelection.farmer) {
+                    NavigationLink(destination: destinationView, isActive: $isNavigate) {
                         EmptyView()
                     }
-                    NavigationLink(value: TabSelection.restaurant) {
-                        EmptyView()
-                    }
-                }
-                .navigationDestination(for: TabSelection.self) { tab in
-                                // Determine which view to navigate to based on the selection.
-                    switch tab {
-                    case .farmer:
-                        Farmer_Order()
-                    case .restaurant:
-                        Restaurant_Inventory()
-                    }
-                }
-                .navigationTitle("Custom Tabs")
-                // This triggers the navigation programmatically.
-                .onChange(of: selectedTab) { _ in
-                    // This block intentionally left blank.
-                    // Navigation is triggered by the change of selectedTab's value.
                 }
             }
             
@@ -116,7 +100,7 @@ struct LoginPage: View {
             wrongUsername = 0
             if password.lowercased() == "" {
                 wrongPassword = 0
-                showingLoginScreen = true
+                isNavigate = true
             } else {
                 // set border of the red box as 2
                 wrongPassword = 2

@@ -30,7 +30,9 @@ import com.azure.spring.data.cosmos.repository.config.EnableCosmosRepositories;
 @EnableCosmosRepositories(basePackages = {
     "com.example.foodsustainability.user", 
     "com.example.foodsustainability.registration.token", 
-    "com.example.foodsustainability.restaurant"
+    "com.example.foodsustainability.restaurant",
+    "com.example.foodsustainability.order",
+    "com.example.foodsustainability.farm"
 })
 public class FoodSustainabilityAppConfiguration extends AbstractCosmosConfiguration {
 

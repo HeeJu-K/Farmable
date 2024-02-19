@@ -1,0 +1,43 @@
+.container {
+    min-height: 100vh;
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .navbar {
+    width: 100%;
+    background-color: #0070f3;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .menuContainer {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .menuItem {
+    display: inline-block;
+    background-color: #000000;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 10px;
+    font-size: 20px;
+  }
+  
+  /* Add responsiveness */
+  @media (max-width: 600px) {
+    .navbar h1 {
+      font-size: 18px;
+    }
+    .menuItem {
+      font-size: 16px;
+    }
+  }
+  

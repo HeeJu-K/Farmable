@@ -1,44 +1,8 @@
 package com.example.foodsustainability.user;
 
-// import org.hibernate.annotations.NaturalId;
-
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import lombok.AllArgsConstructor;
-// import lombok.Getter;
-// import lombok.NoArgsConstructor;
-// import lombok.Setter;
-
-// @Getter
-// @Setter
-// @Entity
-// @NoArgsConstructor
-// @AllArgsConstructor
-// public class User {
-
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
-//     private String firstName;
-//     private String lastName;
-//     @NaturalId(mutable = true)
-//     private String email;
-//     private String password;
-//     private String role;
-//     private boolean isEnabled = false;
-
-// }
-
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
-// import org.springframework.data.cosmos.core.mapping.Document;
-// import org.springframework.data.cosmos.core.mapping.PartitionKey;
-
-// import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 
 @Container(containerName = "user")
 public class User {

@@ -7,30 +7,35 @@
 
 import SwiftUI
 
-struct NavbarView: View {
+struct RestaurantView: View {
     var body: some View {
         TabView {
-            Farmer_Inventory()
+            Restaurant_Inventory()
                 .tabItem() {
                     Image(systemName: "archivebox")
                     Text("Inventory")
                 }
-            Farmer_Order()
+            Restaurant_Order()
                 .tabItem() {
                     Image(systemName: "shippingbox")
                     Text("Order")
                 }
-            Farmer_Profile()
+            Restaurant_Menu()
+                .tabItem() {
+                    Image(systemName: "menucard")
+                    Text("Menu")
+                }
+            Restaurant_Profile()
                 .tabItem() {
                     Image(systemName: "person")
                     Text("Profile")
                 }
-        }
+        }.accentColor(Color.green)
     }
 }
 
-struct NavbarView_Previews: PreviewProvider {
+struct RestaurantView_Previews: PreviewProvider {
     static var previews: some View {
-        NavbarView()
+        RestaurantView()
     }
 }
