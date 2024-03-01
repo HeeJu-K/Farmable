@@ -68,6 +68,7 @@ public class OrderService implements IOrderService {
         Date currentDate = new Date(); // in milli seconds
         Order newOrder = new Order();
         newOrder.setId(UUID.randomUUID().toString());
+        newOrder.setOrderItem(request.orderItem());
         newOrder.setOriginFarm(request.originFarm());
         newOrder.setDestinationRestaurant(request.destinationRestaurant());
         newOrder.setPrice(request.price());

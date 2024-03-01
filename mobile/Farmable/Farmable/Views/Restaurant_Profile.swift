@@ -30,7 +30,7 @@ struct Restaurant_Profile: View {
                 .cornerRadius(33)
             VStack{
                 Text("Stone Buner")
-                    .font(.system(size: 20) )
+                    .font(.system(size: 20))
                 Text("Address")
             }
             Image(systemName: "chevron.right")

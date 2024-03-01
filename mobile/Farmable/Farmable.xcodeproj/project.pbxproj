@@ -11,6 +11,7 @@
 		52132D632B889F27000E504A /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52132D622B889F27000E504A /* Order.swift */; };
 		5232D1172B91CA9E00CB69F8 /* EditTeamDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5232D1162B91CA9E00CB69F8 /* EditTeamDescription.swift */; };
 		5232D1192B91CF6F00CB69F8 /* EditRestaurantDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5232D1182B91CF6F00CB69F8 /* EditRestaurantDescription.swift */; };
+		5232D11B2B92756F00CB69F8 /* OrderDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5232D11A2B92756F00CB69F8 /* OrderDetails.swift */; };
 		52374B6A2B71872800F87663 /* Farmer_Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B692B71872800F87663 /* Farmer_Inventory.swift */; };
 		52374B6C2B71873900F87663 /* Farmer_Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B6B2B71873900F87663 /* Farmer_Profile.swift */; };
 		52374B6E2B71874800F87663 /* Restaurant_Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52374B6D2B71874800F87663 /* Restaurant_Inventory.swift */; };
@@ -36,6 +37,7 @@
 		52132D622B889F27000E504A /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		5232D1162B91CA9E00CB69F8 /* EditTeamDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTeamDescription.swift; sourceTree = "<group>"; };
 		5232D1182B91CF6F00CB69F8 /* EditRestaurantDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRestaurantDescription.swift; sourceTree = "<group>"; };
+		5232D11A2B92756F00CB69F8 /* OrderDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetails.swift; sourceTree = "<group>"; };
 		52374B692B71872800F87663 /* Farmer_Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farmer_Inventory.swift; sourceTree = "<group>"; };
 		52374B6B2B71873900F87663 /* Farmer_Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farmer_Profile.swift; sourceTree = "<group>"; };
 		52374B6D2B71874800F87663 /* Restaurant_Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant_Inventory.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				52B3117C2B91BBBD00C727AE /* EditProfileInfo.swift */,
 				5232D1162B91CA9E00CB69F8 /* EditTeamDescription.swift */,
 				5232D1182B91CF6F00CB69F8 /* EditRestaurantDescription.swift */,
+				5232D11A2B92756F00CB69F8 /* OrderDetails.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				5296739B2B8B2BB30048812F /* FinishedOrder.swift in Sources */,
 				52374B6C2B71873900F87663 /* Farmer_Profile.swift in Sources */,
 				5288CD642B76244000634AF5 /* Restaurant_Menu.swift in Sources */,
+				5232D11B2B92756F00CB69F8 /* OrderDetails.swift in Sources */,
 				52132D632B889F27000E504A /* Order.swift in Sources */,
 				5288CD622B76240800634AF5 /* Restaurant_Order.swift in Sources */,
 				52132D442B8854A8000E504A /* APIRequest.swift in Sources */,

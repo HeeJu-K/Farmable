@@ -10,6 +10,7 @@ import SwiftUI
 
 struct OrderPostRequest: Codable {
     let id: String
+    let orderItem: String
     let originFarm: String
     let destinationRestaurant: String
     let orderStatus: Int
@@ -17,11 +18,12 @@ struct OrderPostRequest: Codable {
     let price: Int
     let timestamp: String
     let lastUpdateTime: String
+    let restaurantNotes: String
 }
 
 struct Restaurant_Inventory: View {
     struct Item: Identifiable {
-        let id = UUID() // Provides a unique identifier for each item
+        let id = UUID()
         let name: String
         let quantity: String
     }
@@ -35,6 +37,7 @@ struct Restaurant_Inventory: View {
     @State private var errorMessage: String?
     
     @State private var id: String = ""
+    @State private var orderItem: String = ""
     @State private var originFarm: String = ""
     @State private var test: String = ""
     @State private var destinationRestaurant: String = ""
@@ -43,45 +46,123 @@ struct Restaurant_Inventory: View {
     @State private var price: Int = 0
     @State private var timestamp: String = ""
     @State private var lastUpdateTime: String = ""
+    @State private var restaurantNotes: String = ""
     
+    @State private var isShowingRequestPopup: Bool = false
+    @State private var activeRequestItem: String = ""
+    
+    var RequestView: some View {
+        GeometryReader { geometry in
+            VStack{
+                Spacer()
+                HStack{
+                    Spacer()
+                    VStack{
+                        Text(activeRequestItem)
+                            .font(.largeTitle)
+                        HStack{
+                            Spacer()
+                            Text("Farm:")
+                            TextField("Origin Farm", text: $originFarm)
+                            Spacer()
+                        }
+                        HStack{
+                            Spacer()
+                            Text("Price:")
+                            TextField("Price per Ibs", value: $price, formatter: NumberFormatter())
+                            Text(" per Ibs")
+                            Spacer()
+                        }
+                        HStack{
+                            Spacer()
+                            Text("Quantity:")
+                            TextField("Quantity", value: $quantity, formatter: NumberFormatter())
+                            Text(" Ibs")
+                            Spacer()
+                        }
+                        HStack{
+                            Spacer()
+                            Text("Special Notes to Farmer:")
+                            TextField("Please write down notes to farmer if any", text: $restaurantNotes)
+                            Spacer()
+                        }
+                        Button("request item") {}
+                            .padding(5)
+                            .background(Color.green)
+                            .cornerRadius(5)
+                            .foregroundColor(.white)
+                    }
+                    .frame(width: geometry.size.width*0.8, height:geometry.size.height*0.5)
+                    .background(Color.white)
+                    Spacer()
+                }
+                Spacer()
+            }
+        }
+    }
     var body: some View {
-        VStack{
-            Text("Trackable Produce")
-            List {
-                ForEach(itemList) { item in
-                    HStack{
-                        Text(item.name) // Directly access the `name` property
-                        Button("Request"){
-                            print("hello")
-                            let orderRequest = OrderPostRequest(
-                                                id: id,
-                                                originFarm: originFarm,
-                                                destinationRestaurant: "This Restaurant",
-                                                orderStatus: orderStatus,
-                                                quantity: quantity,
-                                                price: 300,
-                                                timestamp: timestamp,
-                                                lastUpdateTime: lastUpdateTime
-                                            )
-                            let request = APIRequest()
-                            request.postRequest(requestBody: orderRequest, endpoint: "/order/create") { result in
-                                switch result {
-                                case .success(let data):
-                                    self.responseData = data
-                                case .failure(let error):
-                                    self.errorMessage = "Error: \(error)"
+        GeometryReader { geometry in
+            ZStack{
+                VStack{
+                    Text("Trackable Produce")
+                    Spacer()
+                    
+                    List {
+                        ForEach(itemList) { item in
+                            HStack{
+                                Text(item.name)
+                                Spacer()
+                                Button("Request"){
+                                    self.isShowingRequestPopup = true
+                                    self.activeRequestItem = item.name
+                                    
+                                    let orderRequest = OrderPostRequest(
+                                        id: id,
+                                        orderItem: orderItem,
+                                        originFarm: originFarm,
+                                        destinationRestaurant: "This Restaurant",
+                                        orderStatus: orderStatus,
+                                        quantity: quantity,
+                                        price: 300,
+                                        timestamp: timestamp,
+                                        lastUpdateTime: lastUpdateTime,
+                                        restaurantNotes: restaurantNotes
+                                    )
+                                    let request = APIRequest()
+                                    request.postRequest(requestBody: orderRequest, endpoint: "/order/create") { result in
+                                        switch result {
+                                        case .success(let data):
+                                            self.responseData = data
+                                        case .failure(let error):
+                                            self.errorMessage = "Error: \(error)"
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+                    
+                    HStack{
+                        Spacer()
+                        Image(systemName: "qrcode.viewfinder")
+                            .resizable()
+                            .frame(width:50, height:50)
+                        Spacer()
+                    }
+                    Spacer()
+                        .frame(height: geometry.size.height*0.1)
+                }
+                if isShowingRequestPopup {
+                    Color.black.opacity(0.4)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            isShowingRequestPopup = false
+                        }
+                    RequestView
                 }
             }
-            TextField("Test", text: $test)
-            TextField("Origin Farm", text: $originFarm)
-            TextField("Quantity", value: $quantity, formatter: NumberFormatter())
-        
+            
         }
-        
     }
 }
 

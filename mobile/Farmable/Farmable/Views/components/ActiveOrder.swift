@@ -10,8 +10,8 @@ import SwiftUI
 struct ActiveOrder: View {
     let orderRequest: OrderRequest
     internal init(orderRequest: OrderRequest) {
-            self.orderRequest = orderRequest
-        }
+        self.orderRequest = orderRequest
+    }
     @State private var selectedTab: Int = 0 //0: active order, 1: order history
     @State private var progress: CGFloat = 1
 
