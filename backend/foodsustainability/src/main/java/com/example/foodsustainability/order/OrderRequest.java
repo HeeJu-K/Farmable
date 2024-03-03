@@ -2,7 +2,7 @@ package com.example.foodsustainability.order;
 
 public record OrderRequest(
         String id,
-        String orderItem,
+        String produceName,
         String originFarm,
         String destinationRestaurant,
         Integer orderStatus,

@@ -71,4 +71,10 @@ public class OrderController {
         orderService.updateOrderStatus(UpdateOrderRequest);
         return "Success! Order status is updated!";
     }
+
+    @PutMapping("/harvest")
+    public String addHarvestTime(@RequestBody OrderRequest AddHarvestRequest, final HttpServletRequest request) {
+        orderService.addHarvestTime(AddHarvestRequest);
+        return "Success! Harvest Time and Notes are added";
+    }
 }

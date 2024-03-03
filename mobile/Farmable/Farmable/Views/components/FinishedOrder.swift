@@ -63,7 +63,7 @@ struct FinishedOrder: View {
 struct FinishedOrder_Previews: PreviewProvider {
     static var previews: some View {
         let sampleOrderRequest = OrderRequest(
-        id: "", originFarm: "", destinationRestaurant: "", orderStatus: 0, quantity: 0, price: 0, timestamp: "", lastUpdateTime: ""
+            id: "", produceName:"",originFarm: "", destinationRestaurant: "", orderStatus: 0, quantity: 0, price: 0, harvestTime: "", restaurantNotes:"", farmerNotes:"", lastUpdateTime: ""
         )
         FinishedOrder(orderRequest:sampleOrderRequest)
     }

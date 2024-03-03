@@ -10,7 +10,7 @@ import SwiftUI
 
 struct OrderPostRequest: Codable {
     let id: String
-    let orderItem: String
+    let produceName: String
     let originFarm: String
     let destinationRestaurant: String
     let orderStatus: Int
@@ -25,19 +25,21 @@ struct Restaurant_Inventory: View {
     struct Item: Identifiable {
         let id = UUID()
         let name: String
+        let originFarm: String
         let quantity: String
     }
     @State private var itemList = [
-        Item(name: "Spinach", quantity: "50Ibs"),
-        Item(name: "Apples", quantity: "30Ibs"),
-        Item(name: "Lemon", quantity: "10Ibs"),
-        Item(name: "Squash", quantity: "45Ibs"),
+        Item(name: "Spinach", originFarm:"HeeJu's Farm", quantity: "50Ibs"),
+        Item(name: "Apples", originFarm:"Sean's Farm", quantity: "30Ibs"),
+        Item(name: "Lemon", originFarm:"Sean's Farm", quantity: "10Ibs"),
+        Item(name: "Squash", originFarm:"Sean's Farm", quantity: "45Ibs"),
+        Item(name: "Tomato", originFarm:"HeeJu's Farm", quantity: "80Ibs"),
     ]
     @State private var responseData: String?
     @State private var errorMessage: String?
     
     @State private var id: String = ""
-    @State private var orderItem: String = ""
+    @State private var produceName: String = ""
     @State private var originFarm: String = ""
     @State private var test: String = ""
     @State private var destinationRestaurant: String = ""
@@ -49,7 +51,8 @@ struct Restaurant_Inventory: View {
     @State private var restaurantNotes: String = ""
     
     @State private var isShowingRequestPopup: Bool = false
-    @State private var activeRequestItem: String = ""
+    @State private var activeRequestItem: Item?
+    
     
     var RequestView: some View {
         GeometryReader { geometry in
@@ -58,12 +61,12 @@ struct Restaurant_Inventory: View {
                 HStack{
                     Spacer()
                     VStack{
-                        Text(activeRequestItem)
+                        Text(activeRequestItem?.name ?? "")
                             .font(.largeTitle)
                         HStack{
                             Spacer()
                             Text("Farm:")
-                            TextField("Origin Farm", text: $originFarm)
+                            Text(activeRequestItem?.originFarm ?? "")
                             Spacer()
                         }
                         HStack{
@@ -86,7 +89,29 @@ struct Restaurant_Inventory: View {
                             TextField("Please write down notes to farmer if any", text: $restaurantNotes)
                             Spacer()
                         }
-                        Button("request item") {}
+                        Button("Request") {
+                            let orderRequest = OrderPostRequest(
+                                id: id,
+                                produceName: activeRequestItem?.name ?? "",
+                                originFarm: originFarm,
+                                destinationRestaurant: "This Restaurant",
+                                orderStatus: orderStatus,
+                                quantity: quantity,
+                                price: price,
+                                timestamp: timestamp,
+                                lastUpdateTime: lastUpdateTime,
+                                restaurantNotes: restaurantNotes
+                            )
+                            let request = APIRequest()
+                            request.postRequest(requestBody: orderRequest, endpoint: "/order/create") { result in
+                                switch result {
+                                case .success(let data):
+                                    self.responseData = data
+                                case .failure(let error):
+                                    self.errorMessage = "Error: \(error)"
+                                }
+                            }
+                        }
                             .padding(5)
                             .background(Color.green)
                             .cornerRadius(5)
@@ -111,34 +136,21 @@ struct Restaurant_Inventory: View {
                         ForEach(itemList) { item in
                             HStack{
                                 Text(item.name)
+                                    .font(.system(size: 24))
+                                Spacer()
+                                VStack{
+                                    Spacer()
+                                    Text(item.originFarm)
+                                        .font(.system(size: 12))
+                                }
                                 Spacer()
                                 Button("Request"){
                                     self.isShowingRequestPopup = true
-                                    self.activeRequestItem = item.name
-                                    
-                                    let orderRequest = OrderPostRequest(
-                                        id: id,
-                                        orderItem: orderItem,
-                                        originFarm: originFarm,
-                                        destinationRestaurant: "This Restaurant",
-                                        orderStatus: orderStatus,
-                                        quantity: quantity,
-                                        price: 300,
-                                        timestamp: timestamp,
-                                        lastUpdateTime: lastUpdateTime,
-                                        restaurantNotes: restaurantNotes
-                                    )
-                                    let request = APIRequest()
-                                    request.postRequest(requestBody: orderRequest, endpoint: "/order/create") { result in
-                                        switch result {
-                                        case .success(let data):
-                                            self.responseData = data
-                                        case .failure(let error):
-                                            self.errorMessage = "Error: \(error)"
-                                        }
-                                    }
+                                    self.activeRequestItem = item
                                 }
+                                Image(systemName: "chevron.right")
                             }
+                            .frame(height:50)
                         }
                     }
                     

@@ -6,18 +6,6 @@
 //
 
 import SwiftUI
-//struct OrderRequest: Codable {
-//    let id: String
-//    let originFarm: String
-//    let destinationRestaurant: String
-//    let orderStatus: Int
-//    let quantity: Int
-//    let price: Int
-//    let timestamp: String?
-//    let lastUpdateTime: String?
-//}
-
-
 
 struct Farmer_Order: View {
     @State private var selectedTab: Int = 0 //0: active order, 1: order history
@@ -69,31 +57,35 @@ struct Farmer_Order: View {
                         }
                         .cornerRadius(10)
                         .border(.green)
-                        //                        ScrollView {
-                        //display active order view
-                        if selectedTab == 0 {
-                            VStack{
-                                if !responseData.isEmpty {
-                                    
-                                    ForEach(responseData, id: \.id) { orderRequest in
-                                        if orderRequest.orderStatus < 6 {
-                                            Button(action: {
-                                                self.selectedOrderRequest = orderRequest
-                                                self.navigateToOrderDetails = true
-                                            }) {
-                                                ActiveOrder(orderRequest: orderRequest)
+//                        ScrollView {
+                            //display active order view
+                            if selectedTab == 0 {
+                                VStack(spacing:0){
+                                    if !responseData.isEmpty {
+//
+                                        ForEach(responseData, id: \.id) { orderRequest in
+                                            if orderRequest.orderStatus < 6 {
+
+                                                Button(action: {
+                                                    self.selectedOrderRequest = orderRequest
+                                                    self.navigateToOrderDetails = true
+                                                }) {
+                                                    ActiveOrder(orderRequest: orderRequest)
+                                                }
+//                                                Spacer()
+//                                                    .frame(height: 10)
+//                                                ActiveOrder(orderRequest: orderRequest)
                                             }
-                                            //                                                ActiveOrder(orderRequest: orderRequest)
                                         }
+//
+                                    } else {
+                                        Text("Data is loading...")
                                     }
-                                    
-                                } else {
-                                    Text("Data is loading...")
                                 }
+                                
                             }
-                            
                         }
-                        //                        }
+//                        .frame(height: geometry.size.height*0.8)
                         ScrollView {
                             //display completed order view
                             if selectedTab == 1{
@@ -104,7 +96,7 @@ struct Farmer_Order: View {
                                                 FinishedOrder(orderRequest: orderRequest)
                                             }
                                         }
-                                        
+
                                     } else {
                                         Text("Data is loading...")
                                     }
@@ -135,7 +127,7 @@ struct Farmer_Order: View {
                             }
                         }
                         
-                    }
+//                    }
                 }
             }
         }

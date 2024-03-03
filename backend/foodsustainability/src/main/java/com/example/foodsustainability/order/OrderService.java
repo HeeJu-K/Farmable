@@ -68,12 +68,13 @@ public class OrderService implements IOrderService {
         Date currentDate = new Date(); // in milli seconds
         Order newOrder = new Order();
         newOrder.setId(UUID.randomUUID().toString());
-        newOrder.setOrderItem(request.orderItem());
+        newOrder.setProduceName(request.produceName());
         newOrder.setOriginFarm(request.originFarm());
         newOrder.setDestinationRestaurant(request.destinationRestaurant());
         newOrder.setPrice(request.price());
         newOrder.setQuantity(request.quantity());
         newOrder.setOrderStatus(0);
+        newOrder.setRestaurantNotes(request.restaurantNotes());
         newOrder.setLastUpdateTime(currentDate);
         return orderRepository.save(newOrder);
     }
@@ -87,6 +88,25 @@ public class OrderService implements IOrderService {
             Order order = optionalOrder.get();
             order.setOrderStatus(request.orderStatus());
             order.setLastUpdateTime(currentDate);
+            return orderRepository.save(order);
+        }    
+        else {
+            // Handle the case where the item doesn't exist
+            throw new RuntimeException("Item not found");
+        }    
+    }
+
+    @Override 
+    public Order addHarvestTime(OrderRequest request) {
+        Date currentDate = new Date(); // in milli seconds
+        PartitionKey partitionKey = new PartitionKey(request.destinationRestaurant());
+        Optional<Order> optionalOrder = orderRepository.findById(request.id(), partitionKey);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setHarvestTime(currentDate);
+            order.setLastUpdateTime(currentDate);
+            order.setOrderStatus(2);
+            order.setFarmerNotes(request.farmerNotes());
             return orderRepository.save(order);
         }    
         else {

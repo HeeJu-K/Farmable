@@ -8,28 +8,29 @@
 import SwiftUI
 struct OrderRequest: Codable {
     let id: String
+    let produceName: String
     let originFarm: String
     let destinationRestaurant: String
     let orderStatus: Int
     let quantity: Int
     let price: Int
-    let timestamp: String?
+    let harvestTime: String?
+    let restaurantNotes: String?
+    let farmerNotes: String?
     let lastUpdateTime: String?
 }
-
-
 
 struct Restaurant_Order: View {
     @State private var selectedTab: Int = 0 //0: active order, 1: order history
     @State private var progress: CGFloat = 1
     // 0: Requested, 1:Accepted, 2:Harvested, 3: On Delivery, 4:Delivered
     let status = [
-            ["icon": "questionmark.bubble", "text": "Requested"],
-            ["icon": "checkmark.circle", "text": "Accepted"],
-            ["icon": "leaf", "text": "Harvested"],
-            ["icon": "car", "text": "Shipping"],
-            ["icon": "bag", "text": "Delivered"]
-        ]
+        ["icon": "questionmark.bubble", "text": "Requested"],
+        ["icon": "checkmark.circle", "text": "Accepted"],
+        ["icon": "leaf", "text": "Harvested"],
+        ["icon": "car", "text": "Shipping"],
+        ["icon": "bag", "text": "Delivered"]
+    ]
     private var progressCnt : CGFloat = 5
     func circleColor(idx:Int) -> Color {
         return Int(progress) >= idx ? .green : Color(uiColor: .systemGray5)
@@ -43,30 +44,30 @@ struct Restaurant_Order: View {
                 ZStack {
                     VStack{
                         HStack {
-                                Button(action: {
-                                    self.selectedTab = 0
-                                }) {
-                                    Text("Active Order")
-                                        .padding()
-                                        .background(self.selectedTab == 0 ? Color.green : Color.clear)
-                                        .foregroundColor(self.selectedTab == 0 ? .white : .black)
-                                }
-                                
-                                Button(action: {
-                                    self.selectedTab = 1
-                                }) {
-                                Text("Order History")
+                            Button(action: {
+                                self.selectedTab = 0
+                            }) {
+                                Text("Active Order")
                                     .padding()
-                                    .background(self.selectedTab == 1 ? Color.green : Color.clear)
-                                    .foregroundColor(self.selectedTab == 1 ? .white : .black)
-                                }
+                                    .background(self.selectedTab == 0 ? Color.green : Color.clear)
+                                    .foregroundColor(self.selectedTab == 0 ? .white : .black)
+                            }
+                            
+                            Button(action: {
+                                self.selectedTab = 1
+                            }) {
+                            Text("Order History")
+                                .padding()
+                                .background(self.selectedTab == 1 ? Color.green : Color.clear)
+                                .foregroundColor(self.selectedTab == 1 ? .white : .black)
+                            }
                         }
                         .cornerRadius(10)
                         .border(.green)
 //                        ScrollView {
                             //display active order view
                             if selectedTab == 0 {
-                                VStack{
+                                VStack(spacing:150){
                                     if !responseData.isEmpty {
                                         
                                         ForEach(responseData, id: \.id) { orderRequest in
@@ -88,7 +89,7 @@ struct Restaurant_Order: View {
                                 VStack{
                                     if !responseData.isEmpty {
                                         ForEach(responseData, id: \.id) { orderRequest in
-                                            if orderRequest.orderStatus >= 6 {
+                                            if orderRequest.orderStatus >= 4 {
                                                 FinishedOrder(orderRequest: orderRequest)
                                             }
                                         }

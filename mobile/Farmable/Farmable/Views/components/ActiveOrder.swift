@@ -32,7 +32,8 @@ struct ActiveOrder: View {
             ZStack{
                 Spacer()
                 Rectangle()
-                    .fill(.green.opacity(0.5))
+                    .fill(.white)
+                    .border(.green)
                     .frame(width: geometry.size.width * 0.95, height: 150)
                     .cornerRadius(20)
                     .padding()
@@ -46,6 +47,7 @@ struct ActiveOrder: View {
                             .overlay(alignment: .leading) {
                                 RoundedRectangle(cornerRadius: 7.0)
                                     .fill(.green)
+                                    .foregroundColor(.black)
                                     .frame(width: geometry.size.width * (CGFloat(orderRequest.orderStatus)/progressCnt)+45)
                         }
                         HStack(spacing:27){
@@ -76,7 +78,7 @@ struct ActiveOrder: View {
 struct ActiveOrder_Previews: PreviewProvider {
     static var previews: some View {
         let sampleOrderRequest = OrderRequest(
-        id: "", originFarm: "", destinationRestaurant: "", orderStatus: 0, quantity: 0, price: 0, timestamp: "", lastUpdateTime: ""
+            id: "", produceName: "", originFarm: "", destinationRestaurant: "", orderStatus: 0, quantity: 0, price: 0, harvestTime: "", restaurantNotes:"", farmerNotes:"", lastUpdateTime: ""
         )
 //        let sampleOrderRequest = OrderRequest()
         ActiveOrder(orderRequest:sampleOrderRequest)

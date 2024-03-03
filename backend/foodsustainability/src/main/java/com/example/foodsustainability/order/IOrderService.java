@@ -21,4 +21,6 @@ public interface IOrderService {
     Order createOrder(OrderRequest CreateOrderRequest);
 
     Order updateOrderStatus(OrderRequest UpdateOrderRequest);
+
+    Order addHarvestTime(OrderRequest UpdateOrderRequest);
 }
