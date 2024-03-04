@@ -126,54 +126,72 @@ struct Restaurant_Inventory: View {
         }
     }
     var body: some View {
-        GeometryReader { geometry in
-            ZStack{
-                VStack{
-                    Text("Trackable Produce")
-                    Spacer()
-                    
-                    List {
-                        ForEach(itemList) { item in
-                            HStack{
-                                Text(item.name)
-                                    .font(.system(size: 24))
-                                Spacer()
-                                VStack{
+        NavigationView{
+            GeometryReader { geometry in
+                ZStack{
+                    VStack{
+                        Text("Trackable Produce")
+                        Spacer()
+                        
+                        List {
+                            ForEach(itemList) { item in
+                                HStack{
+                                    Text(item.name)
+                                        .font(.system(size: 24))
                                     Spacer()
-                                    Text(item.originFarm)
-                                        .font(.system(size: 12))
+                                    VStack{
+                                        Spacer()
+                                        Text(item.originFarm)
+                                            .font(.system(size: 12))
+                                    }
+                                    Spacer()
+                                    Button("Request"){
+                                        self.isShowingRequestPopup = true
+                                        self.activeRequestItem = item
+                                    }
+                                    Image(systemName: "chevron.right")
                                 }
-                                Spacer()
-                                Button("Request"){
-                                    self.isShowingRequestPopup = true
-                                    self.activeRequestItem = item
-                                }
-                                Image(systemName: "chevron.right")
+                                .frame(height:50)
                             }
-                            .frame(height:50)
                         }
-                    }
-                    
-                    HStack{
-                        Spacer()
-                        Image(systemName: "qrcode.viewfinder")
-                            .resizable()
-                            .frame(width:50, height:50)
-                        Spacer()
-                    }
-                    Spacer()
-                        .frame(height: geometry.size.height*0.1)
-                }
-                if isShowingRequestPopup {
-                    Color.black.opacity(0.4)
-                        .edgesIgnoringSafeArea(.all)
-                        .onTapGesture {
-                            isShowingRequestPopup = false
+                        
+                        HStack{
+                            Spacer()
+                            NavigationLink(destination: ScannerViewControllerRepresentable()) {
+                                Image(systemName: "qrcode.viewfinder")
+                                    .resizable()
+                                    .frame(width:50, height:50)
+                                    .padding(10)
+                                    .foregroundColor(.white)
+                                    .background(Color.green)
+                                    .cornerRadius(7)
+                                
+                                //                            Button {}
+                                //                            label: {Image(systemName: "qrcode.viewfinder")
+                                //                                    .resizable()
+                                //                                    .frame(width:50, height:50)
+                                //                                    .padding(10)
+                                //                                    .foregroundColor(.white)
+                                //                                    .background(Color.green)
+                                //                                    .cornerRadius(7)}
+                                //                          }
+                                
+                            }
+                            Spacer()
                         }
-                    RequestView
+                        Spacer()
+                            .frame(height: geometry.size.height*0.1)
+                    }
+                    if isShowingRequestPopup {
+                        Color.black.opacity(0.4)
+                            .edgesIgnoringSafeArea(.all)
+                            .onTapGesture {
+                                isShowingRequestPopup = false
+                            }
+                        RequestView
+                    }
                 }
             }
-            
         }
     }
 }

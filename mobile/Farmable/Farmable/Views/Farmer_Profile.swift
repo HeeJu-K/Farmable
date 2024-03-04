@@ -8,16 +8,20 @@
 import SwiftUI
 
 struct Farmer_Profile: View {
-    @State private var farmerName: String = "Sarah Miller"
-    
+    @State private var farmerName: String = "Sarah-Miller"
+    @State private var farmerFirstName: String = "Sarah"
+    @State private var farmerLastName: String = "Miller"
+
     @State private var farmAddr = ""
 
     @State private var image = UIImage()
+    @State private var isFarmImageRetrived = false
+    @State private var retrievedImage = UIImage()
     @State private var isPhotoPickerPresented = false
 
     @State private var isEditingProfileInfo = false
-    @State private var isEditingTeamDescription = false
-    @State private var isEditingRestaurantDescription = false
+    @State private var isEditingFarmerDescription = false
+    @State private var isEditingFarmDescription = false
 
 
     var collapsedProfileView: some View {
@@ -45,7 +49,7 @@ struct Farmer_Profile: View {
             Spacer(minLength: 20)
             Text("Profile Picture:")
                 .padding(.leading)
-            Text("Please provide a picture of yourself, this picture will be visible to the customers.")
+            Text("Please provide a picture and a description of yourself, they will be visible to the customers.")
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
                 .font(.system(size: 13))
@@ -53,8 +57,12 @@ struct Farmer_Profile: View {
                 .padding(.leading)
                 .multilineTextAlignment(.leading)
             
-            ImagePickerView()
-                .frame(height:200)
+            HStack{
+                Spacer()
+                ImageViewControllerRepresentable(imageName: farmerName+".jpeg")
+                Spacer()
+            }
+                .frame(height: 200)
             HStack{
                 Spacer()
                 Image(systemName: "chevron.right")
@@ -66,7 +74,7 @@ struct Farmer_Profile: View {
         VStack(alignment: .leading){
             Text("Farm Description: ")
                 .padding(.leading)
-            Text("Please provide a picture and a description of your farm, this will be visible to the customers.")
+            Text("Please provide a picture and a description of your farm, they will be visible to the customers.")
                 .font(.system(size: 13))
                 .foregroundStyle(.gray)
                 .lineLimit(nil)
@@ -81,8 +89,19 @@ struct Farmer_Profile: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.leading)
                 .padding(.leading)
-            ImagePickerView()
-                .frame(height:200)
+            HStack{
+                Spacer()
+                ImageViewControllerRepresentable(imageName: "Farm.jpeg")
+                Spacer()
+            }.frame(height:250)
+//            ImagePickerView()
+//                .frame(height:200)
+//            if isFarmImageRetrived{
+//                Image(uiImage: retrievedImage)
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 200, height: 150)
+//            }
             HStack{
                 Spacer()
                 Image(systemName: "chevron.right")
@@ -104,9 +123,24 @@ struct Farmer_Profile: View {
                             Spacer(minLength: 25)
                             Divider()
                         }
+                        // fetch farmer profile image
+//                        .onAppear {
+//                            let request = ImageRequest()
+//                            request.getImg(imageName: "\(farmerName).jpeg") { result in
+//                                DispatchQueue.main.async {
+//                                    switch result {
+//                                    case .success(let image):
+//                                        self.retrievedImage = image
+//                                        self.isFarmImageRetrived = true
+//                                    case .failure(let error):
+//                                        print("Failed to fetch image:", error)
+//                                    }
+//                                }
+//                            }
+//                        }
                         
                         Group{
-                            NavigationLink(destination: EditTeamDescription(isEditingTeamDescription: $isEditingTeamDescription), isActive: $isEditingTeamDescription){
+                            NavigationLink(destination: EditTeamDescription(isEditingTeamDescription: $isEditingFarmerDescription), isActive: $isEditingFarmerDescription){
                                 farmerView}
                             Spacer(minLength: 15)
                             HStack
@@ -122,10 +156,11 @@ struct Farmer_Profile: View {
                         
                         Spacer(minLength: 35)
                         Group{
-                            NavigationLink(destination: EditRestaurantDescription(isEditingRestaurantDescription: $isEditingRestaurantDescription), isActive: $isEditingRestaurantDescription){
+                            NavigationLink(destination: EditRestaurantDescription(isEditingRestaurantDescription: $isEditingFarmDescription), isActive: $isEditingFarmDescription){
                                 farmDescriptionView}
                         }
                     }
+                    
                 }
             }
         }

@@ -18,7 +18,7 @@ struct EditTeamDescription: View {
                 Spacer()
                 VStack(alignment: .leading){
                     Spacer(minLength: 50)
-                    Text("Team Description:")
+                    Text("Personal / Team Description:")
                         .padding(.leading)
                         
                     Spacer()

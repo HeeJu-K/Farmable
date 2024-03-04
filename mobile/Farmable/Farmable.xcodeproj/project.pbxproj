@@ -26,6 +26,9 @@
 		5288CD602B76224000634AF5 /* RestaurantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5288CD5F2B76224000634AF5 /* RestaurantView.swift */; };
 		5288CD622B76240800634AF5 /* Restaurant_Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5288CD612B76240800634AF5 /* Restaurant_Order.swift */; };
 		5288CD642B76244000634AF5 /* Restaurant_Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5288CD632B76244000634AF5 /* Restaurant_Menu.swift */; };
+		528E68A62B95635F00BED62B /* ImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528E68A52B95635F00BED62B /* ImageRequest.swift */; };
+		528E68A82B95870700BED62B /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528E68A72B95870700BED62B /* ImageViewController.swift */; };
+		528E68AA2B95C4FD00BED62B /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528E68A92B95C4FD00BED62B /* ScannerViewController.swift */; };
 		529673992B8AA7F50048812F /* ActiveOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673982B8AA7F50048812F /* ActiveOrder.swift */; };
 		5296739B2B8B2BB30048812F /* FinishedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5296739A2B8B2BB30048812F /* FinishedOrder.swift */; };
 		52B3117B2B8F235F00C727AE /* PhotosPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3117A2B8F235F00C727AE /* PhotosPicker.swift */; };
@@ -53,6 +56,9 @@
 		5288CD5F2B76224000634AF5 /* RestaurantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantView.swift; sourceTree = "<group>"; };
 		5288CD612B76240800634AF5 /* Restaurant_Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant_Order.swift; sourceTree = "<group>"; };
 		5288CD632B76244000634AF5 /* Restaurant_Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant_Menu.swift; sourceTree = "<group>"; };
+		528E68A52B95635F00BED62B /* ImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequest.swift; sourceTree = "<group>"; };
+		528E68A72B95870700BED62B /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		528E68A92B95C4FD00BED62B /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		529673982B8AA7F50048812F /* ActiveOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveOrder.swift; sourceTree = "<group>"; };
 		5296739A2B8B2BB30048812F /* FinishedOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedOrder.swift; sourceTree = "<group>"; };
 		52B3117A2B8F235F00C727AE /* PhotosPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPicker.swift; sourceTree = "<group>"; };
@@ -81,6 +87,8 @@
 				5232D1162B91CA9E00CB69F8 /* EditTeamDescription.swift */,
 				5232D1182B91CF6F00CB69F8 /* EditRestaurantDescription.swift */,
 				5232D11A2B92756F00CB69F8 /* OrderDetails.swift */,
+				528E68A72B95870700BED62B /* ImageViewController.swift */,
+				528E68A92B95C4FD00BED62B /* ScannerViewController.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -89,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				52132D432B8854A8000E504A /* APIRequest.swift */,
+				528E68A52B95635F00BED62B /* ImageRequest.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -235,10 +244,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				5232D1172B91CA9E00CB69F8 /* EditTeamDescription.swift in Sources */,
+				528E68A62B95635F00BED62B /* ImageRequest.swift in Sources */,
 				52374B742B718A7E00F87663 /* FarmerView.swift in Sources */,
 				52374B722B71879400F87663 /* Farmer_Order.swift in Sources */,
 				52374B6E2B71874800F87663 /* Restaurant_Inventory.swift in Sources */,
 				52B3117D2B91BBBD00C727AE /* EditProfileInfo.swift in Sources */,
+				528E68A82B95870700BED62B /* ImageViewController.swift in Sources */,
 				5232D1192B91CF6F00CB69F8 /* EditRestaurantDescription.swift in Sources */,
 				5288CD602B76224000634AF5 /* RestaurantView.swift in Sources */,
 				5296739B2B8B2BB30048812F /* FinishedOrder.swift in Sources */,
@@ -250,6 +261,7 @@
 				52132D442B8854A8000E504A /* APIRequest.swift in Sources */,
 				52507F8B2B5E54C800B75678 /* LoginPage.swift in Sources */,
 				52374B6A2B71872800F87663 /* Farmer_Inventory.swift in Sources */,
+				528E68AA2B95C4FD00BED62B /* ScannerViewController.swift in Sources */,
 				52B3117B2B8F235F00C727AE /* PhotosPicker.swift in Sources */,
 				52374B762B718F4A00F87663 /* LoginTab.swift in Sources */,
 				52374B702B71875600F87663 /* Restaurant_Profile.swift in Sources */,
@@ -311,7 +323,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -365,7 +377,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -383,6 +395,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Farmable/Preview Content\"";
+				DEVELOPMENT_TEAM = 8Y3FX576LD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -390,6 +403,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -411,6 +425,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Farmable/Preview Content\"";
+				DEVELOPMENT_TEAM = 8Y3FX576LD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -418,6 +433,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
