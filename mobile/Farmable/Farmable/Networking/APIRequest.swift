@@ -15,12 +15,13 @@ enum APIError: Error {
 }
 
 struct APIRequest {
-    let requestURL_local = "http://localhost:8080"
+//    let requestURL = "http://localhost:8080" //local
+    let requestURL = "http://10.0.0.2:8080" //global
     
     func postRequest<T: Codable> (requestBody: T, endpoint: String, completion: @escaping(Result<String, APIError>) -> Void ) {
-        print("post request caled", requestURL_local+endpoint)
+        print("post request caled", requestURL+endpoint)
         do {
-            let urlString = self.requestURL_local + endpoint
+            let urlString = self.requestURL + endpoint
             guard let url = URL(string: urlString) else {
                 completion(.failure(.invalidURL))
                 return
@@ -48,9 +49,9 @@ struct APIRequest {
     }
     
     func putRequest<T: Codable> (requestBody: T, endpoint: String, completion: @escaping(Result<String, APIError>) -> Void ) {
-        print("post request caled", requestURL_local+endpoint)
+        print("post request caled", requestURL+endpoint)
         do {
-            let urlString = self.requestURL_local + endpoint
+            let urlString = self.requestURL + endpoint
             guard let url = URL(string: urlString) else {
                 completion(.failure(.invalidURL))
                 return
@@ -79,7 +80,7 @@ struct APIRequest {
     
     func getRequest ( endpoint: String, completion: @escaping(Result<Data, APIError>) -> Void ) {
         print("get request new")
-        let urlString = self.requestURL_local + endpoint
+        let urlString = self.requestURL + endpoint
         guard let url = URL(string: urlString) else {
             completion(.failure(.invalidURL))
             return

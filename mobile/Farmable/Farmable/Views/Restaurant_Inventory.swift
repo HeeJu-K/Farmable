@@ -34,6 +34,7 @@ struct Restaurant_Inventory: View {
         Item(name: "Lemon", originFarm:"Sean's Farm", quantity: "10Ibs"),
         Item(name: "Squash", originFarm:"Sean's Farm", quantity: "45Ibs"),
         Item(name: "Tomato", originFarm:"HeeJu's Farm", quantity: "80Ibs"),
+        Item(name: "Potato", originFarm:"HeeJu's Farm", quantity: "70Ibs"),
     ]
     @State private var responseData: String?
     @State private var errorMessage: String?

@@ -10,9 +10,9 @@ export default function handler(req, res) {
     res.status(200).json({ items: menuItems });
   }
   
-export async function fetchMenuData() {
+export async function fetchData(endpoint) {
 // Fetch data from an API or database
-const response = await fetch('http://localhost:8080/restaurant/menu');
+const response = await fetch('http://localhost:8080/'+endpoint);
 const data = await response.json();
 return data;
 }
