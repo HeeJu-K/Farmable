@@ -12,6 +12,9 @@ export default function Order() {
     const [farmerFeedback, setFarmerFeedback] = useState('');
     const [restaurantFeedback, setRestaurantFeedback] = useState('');
 
+    const url = 'http://10.19.179.108:8080/';
+
+
     const userList = Cookies.get('userList');
 
     const handleFarmerFeedbackChange = (e) => {
@@ -26,7 +29,7 @@ export default function Order() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://10.0.0.2:8080/users/update', {
+            const response = await fetch(url+'users/update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,7 +53,7 @@ export default function Order() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://10.0.0.2:8080/users/update', {
+            const response = await fetch(url+'users/update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -127,12 +127,12 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
           {items.map((item) => (
             <div key={item.id} >
               <button type="button" onClick={(event) => handleSelectItem(event, item)}>{selectedItems.includes(item) ? 'selected' : 'select'}</button>
-              <span>{item.dishName} - ${item.price}</span>
+              <div>{item.dishName} - ${item.price}</div>
               {item.ingredients.map((ingredient) => {
                 if (ingredient.produce) {
-                  return (<button type="button" onClick={() => showItemDetails( ingredient)} style={{ color: 'green' }}>{ingredient.name}</button>)
+                  return (<span onClick={() => showItemDetails( ingredient)} style={{ color: 'green' }}>{ingredient.name}, </span>)
                 } else {
-                  return (<span>{ingredient.name}</span>)
+                  return (<span>{ingredient.name}, </span>)
                 }
               }
               )}
@@ -145,7 +145,7 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
       <Modal isOpen={isModalOpen} onClose={closeModal} content={(
         <div>
           <p>{activeProduce?.produce?.originFarm}</p>
-          <p>{activeProduce?.produce?.harvestTime}</p>
+          <p>Harvest Time: {activeProduce?.produce?.harvestTime}</p>
           <p>About the Farm: {userList[0].teamDescription}</p>
         </div>
       )} />
