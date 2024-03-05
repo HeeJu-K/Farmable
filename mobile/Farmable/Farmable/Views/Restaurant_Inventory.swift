@@ -21,6 +21,16 @@ struct OrderPostRequest: Codable {
     let restaurantNotes: String
 }
 
+struct GroceryList: Codable {
+    let id: String
+    let groceryName: String
+    let quantity: Int
+    let price: Int?
+    let harvestTime: String?
+    let originFarm: String
+    let farmerNotes: String?
+}
+
 struct Restaurant_Inventory: View {
     struct Item: Identifiable {
         let id = UUID()
@@ -28,14 +38,17 @@ struct Restaurant_Inventory: View {
         let originFarm: String
         let quantity: String
     }
-    @State private var itemList = [
-        Item(name: "Spinach", originFarm:"HeeJu's Farm", quantity: "50Ibs"),
-        Item(name: "Apples", originFarm:"Sean's Farm", quantity: "30Ibs"),
-        Item(name: "Lemon", originFarm:"Sean's Farm", quantity: "10Ibs"),
-        Item(name: "Squash", originFarm:"Sean's Farm", quantity: "45Ibs"),
-        Item(name: "Tomato", originFarm:"HeeJu's Farm", quantity: "80Ibs"),
-        Item(name: "Potato", originFarm:"HeeJu's Farm", quantity: "70Ibs"),
-    ]
+//    @State private var itemList = [
+//        Item(name: "Spinach", originFarm:"HeeJu's Farm", quantity: "50Ibs"),
+//        Item(name: "Apples", originFarm:"Sean's Farm", quantity: "30Ibs"),
+//        Item(name: "Lemon", originFarm:"Sean's Farm", quantity: "10Ibs"),
+//        Item(name: "Squash", originFarm:"Sean's Farm", quantity: "45Ibs"),
+//        Item(name: "Tomato", originFarm:"HeeJu's Farm", quantity: "80Ibs"),
+//        Item(name: "Potato", originFarm:"HeeJu's Farm", quantity: "70Ibs"),
+//    ]
+    
+    @State private var itemList: [GroceryList] = []
+
     @State private var responseData: String?
     @State private var errorMessage: String?
     
@@ -52,7 +65,7 @@ struct Restaurant_Inventory: View {
     @State private var restaurantNotes: String = ""
     
     @State private var isShowingRequestPopup: Bool = false
-    @State private var activeRequestItem: Item?
+    @State private var activeRequestItem: GroceryList?
     
     @State private var isShowingScanner = false //scanner will close when button on popup is pressed
     @State private var isShowingScannedPopup = false // once scanned, the popup will be displayed
@@ -65,7 +78,7 @@ struct Restaurant_Inventory: View {
                 HStack{
                     Spacer()
                     VStack{
-                        Text(activeRequestItem?.name ?? "")
+                        Text(activeRequestItem?.groceryName ?? "")
                             .font(.largeTitle)
                         HStack{
                             Spacer()
@@ -96,8 +109,8 @@ struct Restaurant_Inventory: View {
                         Button("Request") {
                             let orderRequest = OrderPostRequest(
                                 id: id,
-                                produceName: activeRequestItem?.name ?? "",
-                                originFarm: originFarm,
+                                produceName: activeRequestItem?.groceryName ?? "",
+                                originFarm: activeRequestItem?.originFarm ?? "",
                                 destinationRestaurant: "This Restaurant",
                                 orderStatus: orderStatus,
                                 quantity: quantity,
@@ -135,40 +148,51 @@ struct Restaurant_Inventory: View {
                 ZStack{
                     VStack{
                         Text("Trackable Produce")
+                            .onAppear{
+                                let request = APIRequest()
+                                request.getRequest(endpoint: "/restaurant/grocery") { result in
+                                    switch result {
+                                    case .success(let data):
+                                        do {
+                                            let responseData = try JSONDecoder().decode([GroceryList].self, from: data)
+                                            self.itemList = responseData
+                                            print("SEE ITEM LIST", self.itemList)
+                                        } catch {
+                                            print("Error decoding JSON: \(error)")
+                                        }
+                                    case .failure(let error):
+                                        self.errorMessage = "Error: \(error)"
+                                    }
+                                }
+                            }
                         Spacer()
                         
                         List {
-                            ForEach(itemList) { item in
-                                HStack{
-                                    Text(item.name)
-                                        .font(.system(size: 24))
-                                    Spacer()
-                                    VStack{
+                            if !itemList.isEmpty{
+                                ForEach(itemList, id: \.id) { item in
+                                    HStack{
+                                        Text(item.groceryName)
+                                            .font(.system(size: 24))
                                         Spacer()
-                                        Text(item.originFarm)
-                                            .font(.system(size: 12))
+                                        VStack{
+                                            Spacer()
+                                            Text(item.originFarm)
+                                                .font(.system(size: 12))
+                                        }
+                                        Spacer()
+                                        Button("Request"){
+                                            self.isShowingRequestPopup = true
+                                            self.activeRequestItem = item
+                                        }
+                                        Image(systemName: "chevron.right")
                                     }
-                                    Spacer()
-                                    Button("Request"){
-                                        self.isShowingRequestPopup = true
-                                        self.activeRequestItem = item
-                                    }
-                                    Image(systemName: "chevron.right")
+                                    .frame(height:50)
                                 }
-                                .frame(height:50)
                             }
                         }
                         
                         HStack{
                             Spacer()
-//                            NavigationLink(destination: ScannerViewControllerRepresentable( isShowingScannedPopup: $isShowingScannedPopup, scannedOrder: $scannedOrder), isActive: $isShowingScanner) {
-//                                Image(systemName: "qrcode.viewfinder")
-//                                    .resizable()
-//                                    .frame(width:50, height:50)
-//                                    .padding(10)
-//                                    .foregroundColor(.white)
-//                                    .background(Color.green)
-//                                    .cornerRadius(7)
                                 
                             Button {isShowingScanner = true}
                             label: {Image(systemName: "qrcode.viewfinder")
@@ -183,21 +207,13 @@ struct Restaurant_Inventory: View {
                             .sheet(isPresented: $isShowingScanner) {
                                 ScannerViewControllerRepresentable(isShowingScannedPopup: $isShowingScannedPopup, scannedOrder: $scannedOrder)
                             }
-//                            if isShowingScannedPopup, let scannedOrder = scannedOrder {
-//                                ScannedInfoPopupView(scannedOrder: scannedOrder, isShowingScanner:$isShowingScanner, isShowingScannedPopup: $isShowingScannedPopup)
-//                            }
-//                            .sheet(isPresented: $isShowingScannedPopup) {
-//                                if let scannedOrder = scannedOrder {
-//                                    ScannedInfoPopupView(scannedOrder: scannedOrder, isShowingScanner: $isShowingScanner, isShowingScannedPopup: $isShowingScannedPopup)
-//                                } else {
-//                                    EmptyView()
-//                                }
-//                            }
                             Spacer()
                         }
                         Spacer()
                             .frame(height: geometry.size.height*0.1)
                     }
+                    
+                    
                     if isShowingScannedPopup, let scannedOrder = scannedOrder {
                         ScannedInfoPopupView(scannedOrder: scannedOrder, isShowingScanner:$isShowingScanner, isShowingScannedPopup: $isShowingScannedPopup)
                     }

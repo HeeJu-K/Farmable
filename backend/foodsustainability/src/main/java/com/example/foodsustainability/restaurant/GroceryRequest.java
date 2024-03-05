@@ -1,11 +1,14 @@
 package com.example.foodsustainability.restaurant;
 
+import java.util.Date;
+
 public record GroceryRequest(
     String groceryName,
-    String quantity,
+    Integer quantity,
     String harvestTime,
-    String price,
-    String originFarm
+    Integer price,
+    String originFarm,
+    String farmerNotes
 ) {
     
 }

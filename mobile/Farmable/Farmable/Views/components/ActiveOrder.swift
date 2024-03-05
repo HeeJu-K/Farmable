@@ -39,7 +39,7 @@ struct ActiveOrder: View {
                     .padding()
                 VStack{
                     Text(orderRequest.originFarm).frame(alignment: .leading)
-                    Text("Quantity: \(orderRequest.quantity), Price:\(orderRequest.price)")
+                    Text("Quantity: \(orderRequest.quantity), Price:\(orderRequest.price), Produce: \(orderRequest.produceName)")
                     ZStack {
                         RoundedRectangle(cornerRadius: 10.0)
                             .fill(Color(uiColor: .systemGray5))

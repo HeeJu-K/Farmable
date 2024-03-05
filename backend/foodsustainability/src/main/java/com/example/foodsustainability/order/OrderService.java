@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -66,6 +67,8 @@ public class OrderService implements IOrderService {
     @Override
     public Order createOrder(OrderRequest request) {
         Date currentDate = new Date(); // in milli seconds
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(currentDate);
         Order newOrder = new Order();
         newOrder.setId(UUID.randomUUID().toString());
         newOrder.setProduceName(request.produceName());
@@ -75,19 +78,21 @@ public class OrderService implements IOrderService {
         newOrder.setQuantity(request.quantity());
         newOrder.setOrderStatus(0);
         newOrder.setRestaurantNotes(request.restaurantNotes());
-        newOrder.setLastUpdateTime(currentDate);
+        newOrder.setLastUpdateTime(dateString);
         return orderRepository.save(newOrder);
     }
 
     @Override
     public Order updateOrderStatus(OrderRequest request) {
         Date currentDate = new Date(); // in milli seconds
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(currentDate);
         PartitionKey partitionKey = new PartitionKey(request.destinationRestaurant());
         Optional<Order> optionalOrder = orderRepository.findById(request.id(), partitionKey);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
             order.setOrderStatus(request.orderStatus());
-            order.setLastUpdateTime(currentDate);
+            order.setLastUpdateTime(dateString);
             return orderRepository.save(order);
         }    
         else {
@@ -99,12 +104,14 @@ public class OrderService implements IOrderService {
     @Override 
     public Order addHarvestTime(OrderRequest request) {
         Date currentDate = new Date(); // in milli seconds
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(currentDate);
         PartitionKey partitionKey = new PartitionKey(request.destinationRestaurant());
         Optional<Order> optionalOrder = orderRepository.findById(request.id(), partitionKey);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
-            order.setHarvestTime(currentDate);
-            order.setLastUpdateTime(currentDate);
+            order.setHarvestTime(dateString);
+            order.setLastUpdateTime(dateString);
             order.setOrderStatus(2);
             order.setFarmerNotes(request.farmerNotes());
             return orderRepository.save(order);

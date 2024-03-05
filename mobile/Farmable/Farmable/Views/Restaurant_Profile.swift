@@ -19,7 +19,9 @@ struct Restaurant_Profile: View {
     @State private var isEditingProfileInfo = false
     @State private var isEditingTeamDescription = false
     @State private var isEditingRestaurantDescription = false
-
+    
+    @State private var responseData: [UserInfo] = []
+    @State private var errorMessage: String?
 
     var collapsedProfileView: some View {
        
@@ -46,6 +48,15 @@ struct Restaurant_Profile: View {
             Spacer(minLength: 20)
             Text("Restaurant Team:")
                 .padding(.leading)
+            if !responseData.isEmpty {
+                Text(responseData[1].teamDescription ?? "")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.black)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.leading)
+                    .multilineTextAlignment(.leading)
+            }
             Text("Please provide a picture of your team, this picture will be visible to the customers.")
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
@@ -67,6 +78,15 @@ struct Restaurant_Profile: View {
         VStack(alignment: .leading){
             Text("Restaurant Description: ")
                 .padding(.leading)
+            if !responseData.isEmpty {
+                Text(responseData[1].locationDescription ?? "")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.black)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.leading)
+                    .multilineTextAlignment(.leading)
+            }
             Text("Please provide a picture and a description to your restaurant, this will be visible to the customers.")
                 .font(.system(size: 13))
                 .foregroundStyle(.gray)
@@ -105,6 +125,25 @@ struct Restaurant_Profile: View {
                             Spacer(minLength: 25)
                             Divider()
                         }
+                        .onAppear{
+                            let request = APIRequest()
+                            request.getRequest(endpoint: "/users") { result in
+                                DispatchQueue.main.async {
+                                    switch result {
+                                    case .success(let data):
+                                        do {
+                                            let responseData = try JSONDecoder().decode([UserInfo].self, from: data)
+                                            self.responseData = responseData
+                                            
+                                        } catch {
+                                            print("Error decoding JSON: \(error)")
+                                        }
+                                    case .failure(let error):
+                                        self.errorMessage = "Error: \(error)"
+                                    }
+                                }
+                            }
+                        }
                         
                         Group{
                             NavigationLink(destination: EditTeamDescription(isEditingTeamDescription: $isEditingTeamDescription), isActive: $isEditingTeamDescription){
@@ -126,6 +165,12 @@ struct Restaurant_Profile: View {
                             NavigationLink(destination: EditRestaurantDescription(isEditingRestaurantDescription: $isEditingRestaurantDescription), isActive: $isEditingRestaurantDescription){
                                 restaurantDescriptionView}
                         }
+                    }
+                    if !responseData.isEmpty {
+                        Text("Feedback from customers:")
+                        Text(responseData[1].restaurantFeedback ?? "")
+                    } else {
+                        Text("No feedback available")
                     }
                 }
             }

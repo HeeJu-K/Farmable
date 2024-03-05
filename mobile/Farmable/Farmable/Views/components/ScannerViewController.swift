@@ -167,6 +167,30 @@ struct ScannedInfoPopupView: View {
                         self.errorMessage = "Error: \(error)"
                     }
                 }
+                print("LETS SEE", scannedOrder.produceName,
+                      " | ",scannedOrder.quantity,
+                      " | ",scannedOrder.price,
+                      " | ",scannedOrder.harvestTime ?? "",
+                      " | ",scannedOrder.originFarm,
+                      " | ",scannedOrder.farmerNotes  ?? "")
+                let updateGroceryList = GroceryList(
+                    id:"",
+                    groceryName: scannedOrder.produceName,
+                    quantity: scannedOrder.quantity,
+                    price: scannedOrder.price ,
+                    harvestTime: scannedOrder.harvestTime ?? "",
+                    originFarm: scannedOrder.originFarm,
+                    farmerNotes: scannedOrder.farmerNotes ?? ""
+                )
+                let updateRequest = APIRequest()
+                updateRequest.postRequest(requestBody: updateGroceryList, endpoint: "/restaurant/grocery/update") { result in
+                    switch result {
+                    case .success(let data):
+                        self.responseData = data
+                    case .failure(let error):
+                        self.errorMessage = "Error: \(error)"
+                    }
+                }
                 isShowingScanner = false
                 isShowingScannedPopup = false
             }

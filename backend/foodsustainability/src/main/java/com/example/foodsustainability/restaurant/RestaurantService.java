@@ -126,6 +126,8 @@ public class RestaurantService implements IRestaurantService {
                 updatedGrocery.setPrice(request.price());
             if (request.originFarm() != null)
                 updatedGrocery.setOriginFarm(request.originFarm());
+            if (request.farmerNotes() != null)
+                updatedGrocery.setFarmerNotes(request.farmerNotes());
             return restaurantInventoryRepository.save(updatedGrocery);
         }
 

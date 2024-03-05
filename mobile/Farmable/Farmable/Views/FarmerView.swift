@@ -10,11 +10,7 @@ import SwiftUI
 struct FarmerView: View {
     var body: some View {
         TabView {
-            Farmer_Inventory()
-                .tabItem() {
-                    Image(systemName: "archivebox")
-                    Text("Inventory")
-                }
+            
             Farmer_Order()
                 .tabItem() {
                     Image(systemName: "shippingbox")

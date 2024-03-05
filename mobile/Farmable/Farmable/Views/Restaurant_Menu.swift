@@ -35,7 +35,7 @@ var menu: [DishItem] = [
         restaurantName: "Ethan Stowell",
         description: "romaine, salami, provolone, taggiasca olives, grape tomatoes, pickled peppers, red onion",
         price: 16,
-        menuType: "Small Plates",
+        menuType: "Salads",
         active: true,
         featured: false
     ),
@@ -48,6 +48,16 @@ var menu: [DishItem] = [
         menuType: "Small Plates",
         active: true,
         featured: false
+    ),
+    DishItem(
+        id: "7675bb2c-b9ff-4573-8ffc-fe5a1c04e5b2",
+        dishName: "Mushroom Pizza",
+        restaurantName: "Stone Burner",
+        description: "inion marmellata / flatbread",
+        price: 25,
+        menuType: "Pizza",
+        active: true,
+        featured: false
     )
 ]
 
@@ -57,20 +67,43 @@ var menuTypes: [String] {
 }
 
 
+
 struct Restaurant_Menu: View {
     
+    
     var menuByTypes: [String: [DishItem]] {
-        Dictionary(grouping: menu) { $0.menuType }
+        Dictionary(grouping: menuList) { $0.menuType }
     }
+    @State private var menuList: [DishItem] = []
+
+    @State private var responseData: String?
+    @State private var errorMessage: String?
     
     @State private var showingPopUp = false
     @State private var selectedItem: DishItem?
     @State private var showingAddItem = false
+
     
     var body: some View {
         GeometryReader { geometry in
             VStack{
                 Text("Menu")
+                    .onAppear{
+                        let request = APIRequest()
+                        request.getRequest(endpoint: "/restaurant/menu") { result in
+                            switch result {
+                            case .success(let data):
+                                do {
+                                    let responseData = try JSONDecoder().decode([DishItem].self, from: data)
+                                    self.menuList = responseData
+                                } catch {
+                                    print("Error decoding JSON: \(error)")
+                                }
+                            case .failure(let error):
+                                self.errorMessage = "Error: \(error)"
+                            }
+                        }
+                    }
                 ZStack{
                     //list view
                     List {
@@ -143,6 +176,7 @@ struct PopUpView: View {
     var dishItem: DishItem
     
     @State private var isActive = true
+    @State private var menuType = ""
 
     var body: some View {
         GeometryReader { geometry in
@@ -154,10 +188,11 @@ struct PopUpView: View {
                 HStack{
                     Text("Menu Type")
                     Spacer()
-                    DropdownView()
+                    DropdownView(selectedMenuType: $menuType)
                         .frame(width: geometry.size.width*0.6)
                 }
-                Button("save") {}
+                Button("save") {
+                }
                     .padding(5)
                     .background(Color.green)
                     .cornerRadius(5)
@@ -168,12 +203,15 @@ struct PopUpView: View {
 }
 
 struct AddItemPopUpView: View {
+    @State private var responseData: String?
+    @State private var errorMessage: String?
     
     @State private var isActive = true
     @State private var isSpecial = false
     @State private var dishName = ""
     @State private var price = ""
     @State private var dishDescription = ""
+    @State private var menuType = ""
 
     var body: some View {
         GeometryReader { geometry in
@@ -186,11 +224,31 @@ struct AddItemPopUpView: View {
                 HStack{
                     Text("Menu Type")
                     Spacer()
-                    DropdownView()
+                    DropdownView(selectedMenuType: $menuType)
                         .frame(width: geometry.size.width*0.6)
                     
                 }
-                Button("save") {}
+                Button("save") {
+                    let newDishItem = DishItem(
+                        id: "",
+                        dishName: dishName,
+                        restaurantName: "",
+                        description: dishDescription,
+                        price: Int(price) ?? 0,
+                        menuType: menuType,
+                        active: isActive,
+                        featured: isSpecial
+                    )
+                    let postRequest = APIRequest()
+                    postRequest.postRequest(requestBody: newDishItem, endpoint: "/restaurant/menu/add") { result in
+                        switch result {
+                        case .success(let data):
+                            self.responseData = data
+                        case .failure(let error):
+                            self.errorMessage = "Error: \(error)"
+                        }
+                    }
+                }
                     .padding(5)
                     .background(Color.green)
                     .cornerRadius(5)
@@ -201,7 +259,7 @@ struct AddItemPopUpView: View {
 }
 
 struct DropdownView: View {
-    @State private var selectedMenuType = "Small Plates"
+    @Binding var selectedMenuType: String
     @State private var newOption: String = ""
     @State private var showTextField: Bool = false
 

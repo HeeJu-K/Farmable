@@ -22,8 +22,9 @@ struct UpdateOrderStatusRequest: Codable {
 func generateQRCode(from dictionary: OrderRequest) -> UIImage? {
     do {
         let data = try JSONEncoder().encode(dictionary)
+        print("qr data", data)
         if let validData = String(data: data,encoding: .utf8){
-            print(validData)
+            print("qr data", validData)
         }
 
         if let filter = CIFilter(name: "CIQRCodeGenerator"){
@@ -65,16 +66,20 @@ struct QRCodeView: View {
 }
 
 struct OrderDetails: View {
-    let orderRequest: OrderRequest
-    internal init(orderRequest: OrderRequest) {
+    var orderRequest: OrderRequest
+    init(orderRequest: OrderRequest) {
         self.orderRequest = orderRequest
+        _updatedOrder = State(initialValue: orderRequest)
     }
     
     @State private var farmerNotes: String = ""
     @State private var showQRCode: Bool = false
+    @State private var updatedOrder: OrderRequest
+
     
     @State private var responseData: String?
     @State private var errorMessage: String?
+
     
     var body: some View {
         VStack(alignment: .leading){
@@ -128,6 +133,7 @@ struct OrderDetails: View {
                                         self.errorMessage = "Error: \(error)"
                                     }
                                 }
+                                
                             }) {
                             Label("Accept", systemImage: "checkmark")
                               .padding(10)
@@ -174,9 +180,24 @@ struct OrderDetails: View {
                                 self.errorMessage = "Error: \(error)"
                             }
                         }
+                        
+                        updatedOrder = OrderRequest(
+                            id: orderRequest.id,
+                            produceName:orderRequest.produceName,
+                            originFarm: orderRequest.originFarm,
+                            destinationRestaurant: orderRequest.destinationRestaurant,
+                            orderStatus: orderRequest.orderStatus,
+                            quantity: orderRequest.quantity,
+                            price: orderRequest.price,
+                            harvestTime: String(Date().timeIntervalSince1970 * 1000),
+                            restaurantNotes: orderRequest.restaurantNotes,
+                            farmerNotes: farmerNotes,
+                            lastUpdateTime:"Current time"
+                        )
                     }
                     if showQRCode {
-                        QRCodeView(image: generateQRCode(from: orderRequest))
+                        
+                        QRCodeView(image: generateQRCode(from: updatedOrder))
                     }
                 }
             }

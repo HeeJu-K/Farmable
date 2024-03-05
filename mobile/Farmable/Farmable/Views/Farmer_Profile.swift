@@ -7,7 +7,29 @@
 
 import SwiftUI
 
+struct UserInfo: Codable {
+    let id: String
+    let firstName: String
+    let lastName: String
+    let password: String
+    let role: String
+    let isEnabled: Bool
+    let profileUrl: String?
+    let size: String?
+    let address: String?
+    let name: String?
+    let email: String
+    let teamDescription: String?
+    let locationDescription: String?
+    let farmerFeedback: String?
+    let restaurantFeedback: String?
+}
+
 struct Farmer_Profile: View {
+    
+    @State private var responseData: [UserInfo] = []
+    @State private var errorMessage: String?
+    
     @State private var farmerName: String = "Sarah-Miller"
     @State private var farmerFirstName: String = "Sarah"
     @State private var farmerLastName: String = "Miller"
@@ -49,6 +71,15 @@ struct Farmer_Profile: View {
             Spacer(minLength: 20)
             Text("Profile Picture:")
                 .padding(.leading)
+            if !responseData.isEmpty {
+                Text(responseData[0].teamDescription ?? "")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.black)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.leading)
+                    .multilineTextAlignment(.leading)
+            }
             Text("Please provide a picture and a description of yourself, they will be visible to the customers.")
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
@@ -74,6 +105,16 @@ struct Farmer_Profile: View {
         VStack(alignment: .leading){
             Text("Farm Description: ")
                 .padding(.leading)
+            if !responseData.isEmpty {
+                Text(responseData[0].locationDescription ?? "")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.black)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.leading)
+                    .multilineTextAlignment(.leading)
+            }
+                
             Text("Please provide a picture and a description of your farm, they will be visible to the customers.")
                 .font(.system(size: 13))
                 .foregroundStyle(.gray)
@@ -123,6 +164,26 @@ struct Farmer_Profile: View {
                             Spacer(minLength: 25)
                             Divider()
                         }
+                        .onAppear{
+                            let request = APIRequest()
+                            request.getRequest(endpoint: "/users") { result in
+                                DispatchQueue.main.async {
+                                    switch result {
+                                    case .success(let data):
+                                        do {
+                                            let responseData = try JSONDecoder().decode([UserInfo].self, from: data)
+                                            self.responseData = responseData
+                                            
+                                        } catch {
+                                            print("Error decoding JSON: \(error)")
+                                        }
+                                    case .failure(let error):
+                                        self.errorMessage = "Error: \(error)"
+                                    }
+                                }
+                            }
+                        }
+                        
                         // fetch farmer profile image
 //                        .onAppear {
 //                            let request = ImageRequest()
@@ -160,6 +221,13 @@ struct Farmer_Profile: View {
                                 farmDescriptionView}
                         }
                     }
+                    if !responseData.isEmpty {
+                        Text("Feedback from customers:")
+                        Text(responseData[0].farmerFeedback ?? "")
+                    } else {
+                        Text("No feedback available")
+                    }
+                    
                     
                 }
             }

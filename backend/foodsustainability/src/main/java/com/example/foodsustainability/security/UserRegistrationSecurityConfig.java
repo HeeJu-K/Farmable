@@ -9,6 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
 
 @Configuration
 @EnableWebSecurity
@@ -51,10 +57,25 @@ public class UserRegistrationSecurityConfig {
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/**").permitAll()
                 .anyRequest().authenticated())
-            .csrf(csrf -> csrf.disable());
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
 
         return http.build();
 
+        
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("*"));
+    configuration.setAllowedHeaders(Arrays.asList("*"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowCredentials(false);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration); // Apply CORS configuration for all paths
+    return source;
         // return http.cors(withDefaults()).csrf(csrf -> csrf.disable())
         //         .authorizeHttpRequests(requests -> requests
         //                 .requestMatchers("/register/**")
@@ -66,24 +87,21 @@ public class UserRegistrationSecurityConfig {
     }
 }
 
-
-
-
-
 // @Bean
-// public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//     return http
-// 1.      .authorizeRequests(auth -> {
-// 2.           auth.requestMatchers("/").permitAll();
-// 3.           auth.requestMatchers("/api/v1/customers/**").hasRole( 
-//              "USER");
-// 4.           auth.requestMatchers("/api/v1/documents/**").hasRole( 
-//              "ADMIN");
-// 5.           auth.anyRequest().authenticated();
-//         })
-// 6.      .csrf(csrf -> csrf.disable())
-// 7.      .sessionManagement(session -> 
-//             session.sessionCreationPolicy( 
-//             SessionCreationPolicy.STATELESS))
-// 8.      .httpBasic(it -> {})
-// 9.      .build();
+// public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
+// Exception {
+// return http
+// 1. .authorizeRequests(auth -> {
+// 2. auth.requestMatchers("/").permitAll();
+// 3. auth.requestMatchers("/api/v1/customers/**").hasRole(
+// "USER");
+// 4. auth.requestMatchers("/api/v1/documents/**").hasRole(
+// "ADMIN");
+// 5. auth.anyRequest().authenticated();
+// })
+// 6. .csrf(csrf -> csrf.disable())
+// 7. .sessionManagement(session ->
+// session.sessionCreationPolicy(
+// SessionCreationPolicy.STATELESS))
+// 8. .httpBasic(it -> {})
+// 9. .build();

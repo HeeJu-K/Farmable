@@ -7,17 +7,17 @@
 
 import SwiftUI
 struct OrderRequest: Codable {
-    let id: String
-    let produceName: String
-    let originFarm: String
-    let destinationRestaurant: String
-    let orderStatus: Int
-    let quantity: Int
-    let price: Int
-    let harvestTime: String?
-    let restaurantNotes: String?
-    let farmerNotes: String?
-    let lastUpdateTime: String?
+    var id: String
+    var produceName: String
+    var originFarm: String
+    var destinationRestaurant: String
+    var orderStatus: Int
+    var quantity: Int
+    var price: Int
+    var harvestTime: String?
+    var restaurantNotes: String?
+    var farmerNotes: String?
+    var lastUpdateTime: String?
 }
 
 struct Restaurant_Order: View {

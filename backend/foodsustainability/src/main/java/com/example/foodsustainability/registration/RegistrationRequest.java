@@ -9,6 +9,8 @@ public record RegistrationRequest(
     String profileUrl, // image url address for profile picture
     String size,
     String address,
-    String name) {
+    String name, 
+    String farmerFeedback,
+    String restaurantFeedback) {
 
 }

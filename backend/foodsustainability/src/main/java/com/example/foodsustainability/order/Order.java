@@ -19,13 +19,13 @@ public class Order {
     // 4: "Delivered", 5: "Rated"
     private Integer quantity;
     private Integer price;
-    private Date harvestTime; // Date of harvest time
-    private Date lastUpdateTime; // Time of last update 
+    private String harvestTime; // Date of harvest time
+    private String lastUpdateTime; // Time of last update 
     private String restaurantNotes;
     private String farmerNotes;
 
     public Order(String id, String produceName, String originFarm, String destinationRestaurant, Integer orderStatus, Integer quantity,
-            Integer price, Date harvestTime, Date lastUpdateTime, String restaurantNotes, String farmerNotes) {
+            Integer price, String harvestTime, String lastUpdateTime, String restaurantNotes, String farmerNotes) {
         this.id = id;
         this.produceName = produceName;
         this.originFarm = originFarm;
@@ -114,22 +114,22 @@ public class Order {
     }
 
 
-    public Date getHarvestTime() {
+    public String getHarvestTime() {
         return harvestTime;
     }
 
 
-    public void setHarvestTime(Date harvestTime) {
+    public void setHarvestTime(String harvestTime) {
         this.harvestTime = harvestTime;
     }
 
 
-    public Date getLastUpdate() {
+    public String getLastUpdate() {
         return lastUpdateTime;
     }
 
 
-    public void setLastUpdateTime(Date lastUpdateTime) {
+    public void setLastUpdateTime(String lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
     }
 

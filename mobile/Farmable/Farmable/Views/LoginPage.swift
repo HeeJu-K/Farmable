@@ -13,7 +13,11 @@ enum TabSelection: Hashable {
 }
 
 struct LoginPage: View {
+    @State private var responseData: String?
+    @State private var errorMessage: String?
+    
     @State private var username = ""
+    @State private var lastName = ""
     @State private var password = ""
     @State private var wrongUsername = 0
     @State private var wrongPassword = 0
@@ -79,6 +83,11 @@ struct LoginPage: View {
                         .background(Color.black.opacity(0.05))
                         .cornerRadius(10)
                         .border(.red, width: CGFloat(wrongPassword))
+                    TextField("LastName", text: $lastName)
+                        .padding()
+                        .frame(width: 300, height: 50)
+                        .background(Color.black.opacity(0.05))
+                        .cornerRadius(10)
                     Button("Login") {
                         authenticateUser(username: username, password: password)
                     }
@@ -86,7 +95,34 @@ struct LoginPage: View {
                     .frame(width: 300, height: 50)
                     .background(Color.green)
                     .cornerRadius(10)
-                    
+                    Button("Register") {
+                        let newUser = UserInfo(
+                            id: "",
+                            firstName: "",
+                            lastName: lastName,
+                            password: password,
+                            role: selectedTab == 0 ? "farmer" : "restaurant",
+                            isEnabled: false,
+                            profileUrl: "url",
+                            size: nil,
+                            address: nil,
+                            name: nil,
+                            email: username,
+                            teamDescription: nil,
+                            locationDescription: nil,
+                            farmerFeedback: nil,
+                            restaurantFeedback: nil
+                        )
+                        let postRequest = APIRequest()
+                        postRequest.postRequest(requestBody: newUser, endpoint: "/register") { result in
+                            switch result {
+                            case .success(let data):
+                                self.responseData = data
+                            case .failure(let error):
+                                self.errorMessage = "Error: \(error)"
+                            }
+                        }
+                    }
                     NavigationLink(destination: destinationView, isActive: $isNavigate) {
                         EmptyView()
                     }

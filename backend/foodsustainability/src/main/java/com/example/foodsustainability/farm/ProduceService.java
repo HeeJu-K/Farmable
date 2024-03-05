@@ -56,8 +56,8 @@ public class ProduceService implements IProduceService {
                 updatedProduce.setProduceName(request.produceName());
             if (request.quantity() != null)
                 updatedProduce.setQuantity(request.quantity());
-            if (request.harvestTime() != null)
-                updatedProduce.setPrice(request.harvestTime());
+            if (request.harvestTime() != null )
+                updatedProduce.setHarvestTime(request.harvestTime());
             if (request.price() != null)
                 updatedProduce.setPrice(request.price());
 

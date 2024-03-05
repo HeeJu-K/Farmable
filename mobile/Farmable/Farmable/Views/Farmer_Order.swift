@@ -64,7 +64,7 @@ struct Farmer_Order: View {
                                     if !responseData.isEmpty {
 //
                                         ForEach(responseData, id: \.id) { orderRequest in
-                                            if orderRequest.orderStatus < 6 {
+                                            if orderRequest.orderStatus < 4 {
 
                                                 Button(action: {
                                                     self.selectedOrderRequest = orderRequest
@@ -92,7 +92,7 @@ struct Farmer_Order: View {
                                 VStack{
                                     if !responseData.isEmpty {
                                         ForEach(responseData, id: \.id) { orderRequest in
-                                            if orderRequest.orderStatus >= 6 {
+                                            if orderRequest.orderStatus >= 4 {
                                                 FinishedOrder(orderRequest: orderRequest)
                                             }
                                         }

@@ -49,7 +49,7 @@ struct APIRequest {
     }
     
     func putRequest<T: Codable> (requestBody: T, endpoint: String, completion: @escaping(Result<String, APIError>) -> Void ) {
-        print("post request caled", requestURL+endpoint)
+        print("put request called", requestURL+endpoint)
         do {
             let urlString = self.requestURL + endpoint
             guard let url = URL(string: urlString) else {

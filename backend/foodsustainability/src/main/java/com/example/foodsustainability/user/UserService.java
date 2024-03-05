@@ -75,6 +75,9 @@ public class UserService implements IUserService {
         user.setSize(request.size());
         user.setAddress(request.address());
         user.setName(request.name());
+        
+        user.setFarmerFeedback(request.farmerFeedback());
+        user.setRestaurantFeedback(request.restaurantFeedback());
         return userRepository.save(user); 
     }
 

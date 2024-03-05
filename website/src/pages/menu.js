@@ -12,6 +12,8 @@ export async function getServerSideProps(context) {
 
   const produceList = await fetchData("restaurant/grocery");
 
+  const userList = await fetchData("users");
+
   const menuItemsWithProduceInfo = menuItems.map(dish => {
     const ingredients = dish.description.split(',').map(ingredient => ingredient.trim());
     const ingredientsWithDetails = ingredients.map(ingredient => ({
@@ -25,7 +27,7 @@ export async function getServerSideProps(context) {
   console.log("SEE MENU WITH DETAILS", menuItemsWithProduceInfo)
 
   return {
-    props: { menuItems, produceList, menuItemsWithProduceInfo },
+    props: { menuItems, produceList, menuItemsWithProduceInfo, userList },
   };
 }
 
@@ -67,7 +69,7 @@ function Modal({ isOpen, onClose, content }) {
   );
 }
 
-export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo }) {
+export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo, userList }) {
 
   const router = useRouter();
 
@@ -75,6 +77,8 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo 
 
   const [activeProduce, setActiveProduce] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  Cookies.set('userList', JSON.stringify(userList));
 
   console.log("see", menuItemsWithProduceInfo)
 
@@ -142,6 +146,7 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo 
         <div>
           <p>{activeProduce?.produce?.originFarm}</p>
           <p>{activeProduce?.produce?.harvestTime}</p>
+          <p>About the Farm: {userList[0].teamDescription}</p>
         </div>
       )} />
 

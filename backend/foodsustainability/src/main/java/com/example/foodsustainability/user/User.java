@@ -20,6 +20,10 @@ public class User {
     private String address;
     private String name; // farm or restaurant name
     private String email;
+    private String teamDescription;
+    private String locationDescription;
+    private String farmerFeedback;
+    private String restaurantFeedback;
 
     public User() {
 
@@ -36,7 +40,11 @@ public class User {
             String profileUrl,
             String size,
             String address,
-            String name) {
+            String name,
+            String teamDescription,
+            String locationDescription, 
+            String farmerFeedback,
+            String restaurantFeedback) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,6 +56,10 @@ public class User {
         this.size = size;
         this.address = address;
         this.name = name;
+        this.teamDescription = teamDescription;
+        this.locationDescription = locationDescription;
+        this.farmerFeedback = farmerFeedback;
+        this.restaurantFeedback = restaurantFeedback;
     }
 
     public String getId() {
@@ -136,5 +148,41 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTeamDescription() {
+        return teamDescription;
+    }
+
+    public void setTeamDescription(String teamDescription) {
+        this.teamDescription = teamDescription;
+    }
+
+    public String getLocationDescription() {
+        return locationDescription;
+    }
+
+    public void setLocationDescription(String locationDescription) {
+        this.locationDescription = locationDescription;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    public String getFarmerFeedback() {
+        return farmerFeedback;
+    }
+
+    public void setFarmerFeedback(String farmerFeedback) {
+        this.farmerFeedback = farmerFeedback;
+    }
+
+    public String getRestaurantFeedback() {
+        return restaurantFeedback;
+    }
+
+    public void setRestaurantFeedback(String restaurantFeedback) {
+        this.restaurantFeedback = restaurantFeedback;
     }
 }
