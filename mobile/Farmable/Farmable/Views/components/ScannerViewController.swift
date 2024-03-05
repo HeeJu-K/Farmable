@@ -13,6 +13,17 @@ import SwiftUI
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
+    
+    var onScanned:((OrderRequest)->Void)?
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        captureSession = AVCaptureSession()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +98,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             guard let stringValue = readableObject.stringValue else { return }
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             found(code: stringValue)
+            print("SCANNED value", stringValue)
         }
 
         dismiss(animated: true)
@@ -94,6 +106,21 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 
     func found(code: String) {
         print(code)
+        guard let data = code.data(using: .utf8) else { return }
+
+        do {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601 // Adjust based on your date format
+            let scannedOrder = try decoder.decode(OrderRequest.self, from: data)
+            print("Decoded OrderRequest:", scannedOrder)
+            
+            DispatchQueue.main.async {
+                self.onScanned?(scannedOrder)
+            }
+
+        } catch {
+            print("Error decoding OrderRequest:", error)
+        }
     }
 
     override var prefersStatusBarHidden: Bool {
@@ -105,14 +132,72 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
 }
 
+struct ScannedInfoPopupView: View {
+    var scannedOrder: OrderRequest
+    @State private var responseData: String?
+    @State private var errorMessage: String?
+
+    @Binding var isShowingScanner: Bool
+    @Binding var isShowingScannedPopup: Bool
+
+    var body: some View {
+        VStack {
+            Text("Scanned Information")
+                .font(.headline)
+            Text("Origin Farm: \(scannedOrder.originFarm)")
+            Text("Produce Name: \(scannedOrder.produceName)")
+            Text("Quantity: \(scannedOrder.quantity)")
+            Text("Price: \(scannedOrder.price)")
+            Text("Harvest Time: \(scannedOrder.harvestTime ?? "")")
+            Text("Notes from farmer: \(scannedOrder.farmerNotes ?? "")")
+
+            Button("Confirm") {
+                
+                let updateOrderStatusRequest = UpdateOrderStatusRequest(
+                    id: scannedOrder.id,
+                    destinationRestaurant: scannedOrder.destinationRestaurant,
+                    orderStatus: 4 // Delivered
+                )
+                let request = APIRequest()
+                request.putRequest(requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
+                    switch result {
+                    case .success(let data):
+                        self.responseData = data
+                    case .failure(let error):
+                        self.errorMessage = "Error: \(error)"
+                    }
+                }
+                isShowingScanner = false
+                isShowingScannedPopup = false
+            }
+            .padding()
+            .background(Color.green)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(radius: 10)
+    }
+}
 
 
 struct ScannerViewControllerRepresentable: UIViewControllerRepresentable {
     typealias UIViewControllerType = ScannerViewController
     
+//    @Binding var isPresented: Bool
+    @Binding var isShowingScannedPopup: Bool
+    @Binding var scannedOrder: OrderRequest?
+//    var onScanned:((OrderRequest)->Void)?
+    
     func makeUIViewController(context: Context) -> ScannerViewController {
-       
-        return ScannerViewController()
+        let viewController = ScannerViewController()
+        viewController.onScanned = { (scannedOrder: OrderRequest) in
+            self.scannedOrder = scannedOrder
+            self.isShowingScannedPopup = true
+        }
+        return viewController
     }
 
     func updateUIViewController(_ uiViewController: ScannerViewController, context: Context) {

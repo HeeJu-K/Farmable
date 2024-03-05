@@ -53,6 +53,9 @@ struct Restaurant_Inventory: View {
     @State private var isShowingRequestPopup: Bool = false
     @State private var activeRequestItem: Item?
     
+    @State private var isShowingScanner = false //scanner will close when button on popup is pressed
+    @State private var isShowingScannedPopup = false // once scanned, the popup will be displayed
+    @State private var scannedOrder: OrderRequest?
     
     var RequestView: some View {
         GeometryReader { geometry in
@@ -157,30 +160,45 @@ struct Restaurant_Inventory: View {
                         
                         HStack{
                             Spacer()
-                            NavigationLink(destination: ScannerViewControllerRepresentable()) {
-                                Image(systemName: "qrcode.viewfinder")
+//                            NavigationLink(destination: ScannerViewControllerRepresentable( isShowingScannedPopup: $isShowingScannedPopup, scannedOrder: $scannedOrder), isActive: $isShowingScanner) {
+//                                Image(systemName: "qrcode.viewfinder")
+//                                    .resizable()
+//                                    .frame(width:50, height:50)
+//                                    .padding(10)
+//                                    .foregroundColor(.white)
+//                                    .background(Color.green)
+//                                    .cornerRadius(7)
+                                
+                            Button {isShowingScanner = true}
+                            label: {Image(systemName: "qrcode.viewfinder")
                                     .resizable()
                                     .frame(width:50, height:50)
                                     .padding(10)
                                     .foregroundColor(.white)
                                     .background(Color.green)
-                                    .cornerRadius(7)
+                                    .cornerRadius(7)}
+                          
                                 
-                                //                            Button {}
-                                //                            label: {Image(systemName: "qrcode.viewfinder")
-                                //                                    .resizable()
-                                //                                    .frame(width:50, height:50)
-                                //                                    .padding(10)
-                                //                                    .foregroundColor(.white)
-                                //                                    .background(Color.green)
-                                //                                    .cornerRadius(7)}
-                                //                          }
-                                
+                            .sheet(isPresented: $isShowingScanner) {
+                                ScannerViewControllerRepresentable(isShowingScannedPopup: $isShowingScannedPopup, scannedOrder: $scannedOrder)
                             }
+//                            if isShowingScannedPopup, let scannedOrder = scannedOrder {
+//                                ScannedInfoPopupView(scannedOrder: scannedOrder, isShowingScanner:$isShowingScanner, isShowingScannedPopup: $isShowingScannedPopup)
+//                            }
+//                            .sheet(isPresented: $isShowingScannedPopup) {
+//                                if let scannedOrder = scannedOrder {
+//                                    ScannedInfoPopupView(scannedOrder: scannedOrder, isShowingScanner: $isShowingScanner, isShowingScannedPopup: $isShowingScannedPopup)
+//                                } else {
+//                                    EmptyView()
+//                                }
+//                            }
                             Spacer()
                         }
                         Spacer()
                             .frame(height: geometry.size.height*0.1)
+                    }
+                    if isShowingScannedPopup, let scannedOrder = scannedOrder {
+                        ScannedInfoPopupView(scannedOrder: scannedOrder, isShowingScanner:$isShowingScanner, isShowingScannedPopup: $isShowingScannedPopup)
                     }
                     if isShowingRequestPopup {
                         Color.black.opacity(0.4)
