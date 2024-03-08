@@ -114,7 +114,7 @@ struct LoginPage: View {
                             restaurantFeedback: nil
                         )
                         let postRequest = APIRequest()
-                        postRequest.postRequest(requestBody: newUser, endpoint: "/register") { result in
+                        postRequest.postRequest(requestType:"POST", requestBody: newUser, endpoint: "/register") { result in
                             switch result {
                             case .success(let data):
                                 self.responseData = data

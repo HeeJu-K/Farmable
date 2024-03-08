@@ -120,7 +120,7 @@ struct Restaurant_Inventory: View {
                                 restaurantNotes: restaurantNotes
                             )
                             let request = APIRequest()
-                            request.postRequest(requestBody: orderRequest, endpoint: "/order/create") { result in
+                            request.postRequest(requestType:"POST", requestBody: orderRequest, endpoint: "/order/create") { result in
                                 switch result {
                                 case .success(let data):
                                     self.responseData = data

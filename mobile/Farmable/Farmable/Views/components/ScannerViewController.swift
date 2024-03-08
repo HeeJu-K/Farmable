@@ -159,7 +159,7 @@ struct ScannedInfoPopupView: View {
                     orderStatus: 4 // Delivered
                 )
                 let request = APIRequest()
-                request.putRequest(requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
+                request.postRequest(requestType:"PUT", requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
                     switch result {
                     case .success(let data):
                         self.responseData = data
@@ -183,7 +183,7 @@ struct ScannedInfoPopupView: View {
                     farmerNotes: scannedOrder.farmerNotes ?? ""
                 )
                 let updateRequest = APIRequest()
-                updateRequest.postRequest(requestBody: updateGroceryList, endpoint: "/restaurant/grocery/update") { result in
+                updateRequest.postRequest(requestType:"POST", requestBody: updateGroceryList, endpoint: "/restaurant/grocery/update") { result in
                     switch result {
                     case .success(let data):
                         self.responseData = data

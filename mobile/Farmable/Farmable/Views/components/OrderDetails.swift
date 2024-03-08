@@ -73,7 +73,7 @@ struct OrderDetails: View {
     }
     
     @State private var farmerNotes: String = ""
-    @State private var showQRCode: Bool = false
+    @State private var showQRCode: Bool = true
     @State private var updatedOrder: OrderRequest
 
     
@@ -83,38 +83,72 @@ struct OrderDetails: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            Group{
-                HStack{
-                    Text("Produce Name: ")
-                    Text(orderRequest.produceName)
-                }
-                HStack{
-                    Text("Origin Farm: ")
-                    Text(orderRequest.originFarm)
-                }
-                HStack{
-                    Text("Produce Price: ")
-                    Text(String(orderRequest.price))
-                }
-                HStack{
-                    Text("Order Quantity: ")
-                    Text(String(orderRequest.quantity))
-                }
+            HStack{
+                Spacer()
+                Text("Order Details")
+//                    .font(.title)
+                    .navigationTitle("Title")
+                    .foregroundColor(.green)
+                Spacer()
+            }
+            Spacer().frame(height:100)
+            HStack{
+                Spacer()
+                    .frame(width: 40)
                 Group{
-                    if orderRequest.restaurantNotes != ""{
-                        Text("Notes from restaurant owners: ")
-                        Text(orderRequest.restaurantNotes ?? "")
-                    } else {
-                        Text("There were no specific instructions from the restaurant.")
-                            .font(.system(size:12))
+                    VStack (alignment: .leading){
+                        
+                        Text(orderRequest.produceName)
+                            .font(.system(size: 35))
+                            .fontWeight(.bold)
+                        Spacer()
+                            .frame(height: 20)
+                        HStack{
+                            Text("Order from ")
+                                .foregroundColor(.gray)
+                            Text(orderRequest.destinationRestaurant)
+                                .font(.system(size: 20))
+                        }
+                        Spacer()
+                            .frame(height: 10)
+                        HStack{
+//                            Spacer()
+//                                .frame(width: 30)
+                            VStack (alignment: .leading){
+                                Text("Price: ")
+                                    .foregroundColor(.gray)
+                                Text("$"+String(orderRequest.price)+" / Ibs")
+                            }
+                            Spacer()
+                            VStack (alignment: .leading){
+                                Text("Quantity: ")
+                                    .foregroundColor(.gray)
+                                Text(String(orderRequest.quantity)+" Ibs")
+                            }
+                            Spacer()
+                        }
+                        Spacer()
+                            .frame(height: 15)
+                        Group{
+                            Text("Notes from restaurant owners: ")
+                                .foregroundColor(.gray)
+                            if orderRequest.restaurantNotes != ""{
+                                Text(orderRequest.restaurantNotes ?? "")
+                            } else {
+                                Text("There were no specific instructions from the restaurant.")
+                                    .font(.system(size:12))
+                            }
+                        }
                     }
                 }
+                Spacer()
+                    .frame(width: 40)
             }
             //for order before accept
             if orderRequest.orderStatus == 0{
                 Group{
                     Spacer()
-                        .frame(height: 20)
+                        .frame(height: 50)
                     HStack{
                         Spacer()
                         HStack {
@@ -125,7 +159,7 @@ struct OrderDetails: View {
                                     orderStatus: 1 // Accepted
                                 )
                                 let request = APIRequest()
-                                request.putRequest(requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
+                                request.postRequest(requestType:"PUT", requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
                                     switch result {
                                     case .success(let data):
                                         self.responseData = data
@@ -143,94 +177,144 @@ struct OrderDetails: View {
                           }
                         }
                         Spacer()
-                        Button("Decline"){}
+                        Button(action: {}) {
+                            Label("Decline", systemImage: "xmark")
+                                .padding(10)
+                                .foregroundColor(.green)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.green, lineWidth: 2)
+                                )
+                        }
                         Spacer()
                     }
                 }
             }
             // for accepted order to be harvested
             if orderRequest.orderStatus==1{
-                Group{
-                    HStack{
+                Spacer()
+                    .frame(height:20)
+                HStack{
+                    Spacer()
+                        .frame(width: 40)
+                    
+                    VStack(alignment: .leading){
+                        
                         Text("Notes for Restaurant:")
+                            .foregroundColor(.gray)
                         TextField("Add notes here", text:$farmerNotes)
-                            .frame(width:200)
-                    }
-                    Text("Please provide details of your farming practices. This is not required but will help restaurants and customers better understand values of your produces.")
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .font(.system(size: 13))
-                        .foregroundStyle(.gray)
-                        .padding(.leading)
-                        .multilineTextAlignment(.leading)
-                    Button("Generate QR Code") {
-                        self.showQRCode = true
-                        let addHarvestTimeRequest = AddHarvestTimeRequest(
-                            id: orderRequest.id,
-                            farmerNotes: farmerNotes,
-                            destinationRestaurant: orderRequest.destinationRestaurant
-                        )
-                        let request = APIRequest()
-                        request.putRequest(requestBody: addHarvestTimeRequest, endpoint: "/order/harvest") { result in
-                            switch result {
-                            case .success(let data):
-                                self.responseData = data
+                            .padding(5)
+                            .background(
+                                RoundedRectangle(cornerRadius: 2)
+                                    .stroke(Color.gray, lineWidth: 1)
+                            )
+                        
+                        Text("Please provide details of your farming practices. This is not required but will help restaurants and customers better understand values of your produces.")
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .font(.system(size: 13))
+                            .foregroundStyle(.gray)
+                            .multilineTextAlignment(.leading)
+                        Spacer()
+                            .frame(height:20)
+                        HStack{
+                            Spacer()
+                            Button(action: {
                                 self.showQRCode = true
-                            case .failure(let error):
-                                self.errorMessage = "Error: \(error)"
+                                let addHarvestTimeRequest = AddHarvestTimeRequest(
+                                    id: orderRequest.id,
+                                    farmerNotes: farmerNotes,
+                                    destinationRestaurant: orderRequest.destinationRestaurant
+                                )
+                                let request = APIRequest()
+                                request.postRequest(requestType:"PUT", requestBody: addHarvestTimeRequest, endpoint: "/order/harvest") { result in
+                                    switch result {
+                                    case .success(let data):
+                                        self.responseData = data
+                                        self.showQRCode = true
+                                    case .failure(let error):
+                                        self.errorMessage = "Error: \(error)"
+                                    }
+                                }
+                                updatedOrder = OrderRequest(
+                                    id: orderRequest.id,
+                                    produceName:orderRequest.produceName,
+                                    originFarm: orderRequest.originFarm,
+                                    destinationRestaurant: orderRequest.destinationRestaurant,
+                                    orderStatus: orderRequest.orderStatus,
+                                    quantity: orderRequest.quantity,
+                                    price: orderRequest.price,
+                                    harvestTime: String(Date().timeIntervalSince1970 * 1000),
+                                    restaurantNotes: orderRequest.restaurantNotes,
+                                    farmerNotes: farmerNotes,
+                                    lastUpdateTime:"Current time"
+                                )
+                            }) {
+                                Label("Generate QR Code", systemImage: "qrcode")
+                                    .padding(10)
+                                    .foregroundColor(.white)
+                                    .background(Color.green)
+                                    .cornerRadius(7)
+                            }
+                            Spacer()
+                        }
+                        if showQRCode {
+                            Spacer()
+                                .frame(height:20)
+                            HStack{
+                                Spacer()
+                                QRCodeView(image: generateQRCode(from: updatedOrder))
+                                Spacer()
                             }
                         }
-                        
-                        updatedOrder = OrderRequest(
-                            id: orderRequest.id,
-                            produceName:orderRequest.produceName,
-                            originFarm: orderRequest.originFarm,
-                            destinationRestaurant: orderRequest.destinationRestaurant,
-                            orderStatus: orderRequest.orderStatus,
-                            quantity: orderRequest.quantity,
-                            price: orderRequest.price,
-                            harvestTime: String(Date().timeIntervalSince1970 * 1000),
-                            restaurantNotes: orderRequest.restaurantNotes,
-                            farmerNotes: farmerNotes,
-                            lastUpdateTime:"Current time"
-                        )
                     }
-                    if showQRCode {
-                        
-                        QRCodeView(image: generateQRCode(from: updatedOrder))
-                    }
+                    Spacer()
+                        .frame(width: 40)
                 }
             }
             // for harvested order shipped
             if orderRequest.orderStatus == 2 {
-                Button(action: {
-                    let updateOrderStatusRequest = UpdateOrderStatusRequest(
-                        id: orderRequest.id,
-                        destinationRestaurant: orderRequest.destinationRestaurant,
-                        orderStatus: 3 // Delivered
-                    )
-                    let request = APIRequest()
-                    request.putRequest(requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
-                        switch result {
-                        case .success(let data):
-                            self.responseData = data
-                        case .failure(let error):
-                            self.errorMessage = "Error: \(error)"
+                Spacer()
+                    .frame(height:20)
+                HStack{
+                    Spacer()
+                    Button(action: {
+                        let updateOrderStatusRequest = UpdateOrderStatusRequest(
+                            id: orderRequest.id,
+                            destinationRestaurant: orderRequest.destinationRestaurant,
+                            orderStatus: 3 // Delivered
+                        )
+                        let request = APIRequest()
+                        request.postRequest(requestType:"PUT", requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
+                            switch result {
+                            case .success(let data):
+                                self.responseData = data
+                            case .failure(let error):
+                                self.errorMessage = "Error: \(error)"
+                            }
                         }
+                    }) {
+                    Label("Shipped", systemImage: "bag")
+                      .padding(10)
+                      .foregroundColor(.white)
+                      .background(Color.green)
+                      .cornerRadius(7)
                     }
-                }) {
-                Label("Delivered", systemImage: "bag")
-                  .padding(10)
-                  .foregroundColor(.white)
-                  .background(Color.green)
-                  .cornerRadius(7)
-              }
+                    Spacer()
+                }
             }
             // for shipped order
             if orderRequest.orderStatus == 3 {
                 Spacer()
-                    .frame(height: 10)
-                Text("This order is on delivery, \\n waiting for restaurant to confirm delivery.")
+                    .frame(height:20)
+                HStack{
+                    Spacer()
+                        .frame(width: 40)
+                    Text("This order is on delivery.\nWait for restaurant to confirm your delivery.")
+                        .foregroundColor(.green)
+                    Spacer()
+                        .frame(width: 40)
+                }
             }
             Spacer()
         }
@@ -243,7 +327,7 @@ struct OrderDetails_Previews: PreviewProvider {
     static var previews: some View {
         
         let sampleOrderRequest = OrderRequest(
-            id: "fwefqwa", produceName: "Spinach", originFarm: "Test Farm", destinationRestaurant: "Test Restaurant", orderStatus: 3, quantity: 10, price: 20, harvestTime: "", restaurantNotes:"", farmerNotes:"", lastUpdateTime: ""
+            id: "fwefqwa", produceName: "Spinach", originFarm: "Test Farm", destinationRestaurant: "Test Restaurant", orderStatus: 0, quantity: 10, price: 20, harvestTime: "", restaurantNotes:"", farmerNotes:"", lastUpdateTime: ""
         )
         OrderDetails(
             orderRequest:sampleOrderRequest

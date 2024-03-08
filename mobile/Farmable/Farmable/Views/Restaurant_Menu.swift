@@ -240,7 +240,7 @@ struct AddItemPopUpView: View {
                         featured: isSpecial
                     )
                     let postRequest = APIRequest()
-                    postRequest.postRequest(requestBody: newDishItem, endpoint: "/restaurant/menu/add") { result in
+                    postRequest.postRequest(requestType:"POST", requestBody: newDishItem, endpoint: "/restaurant/menu/add") { result in
                         switch result {
                         case .success(let data):
                             self.responseData = data
