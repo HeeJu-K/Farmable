@@ -141,68 +141,87 @@ struct ScannedInfoPopupView: View {
     @Binding var isShowingScannedPopup: Bool
 
     var body: some View {
-        VStack {
-            Text("Scanned Information")
-                .font(.headline)
-            Text("Origin Farm: \(scannedOrder.originFarm)")
-            Text("Produce Name: \(scannedOrder.produceName)")
-            Text("Quantity: \(scannedOrder.quantity)")
-            Text("Price: \(scannedOrder.price)")
-            Text("Harvest Time: \(scannedOrder.harvestTime ?? "")")
-            Text("Notes from farmer: \(scannedOrder.farmerNotes ?? "")")
-
-            Button("Confirm") {
-                
-                let updateOrderStatusRequest = UpdateOrderStatusRequest(
-                    id: scannedOrder.id,
-                    destinationRestaurant: scannedOrder.destinationRestaurant,
-                    orderStatus: 4 // Delivered
-                )
-                let request = APIRequest()
-                request.postRequest(requestType:"PUT", requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
-                    switch result {
-                    case .success(let data):
-                        self.responseData = data
-                    case .failure(let error):
-                        self.errorMessage = "Error: \(error)"
+        GeometryReader{ geometry in
+            HStack{
+                Spacer()
+                VStack(alignment: .leading) {
+                    Spacer()
+                    Group{
+                        Text("Scanned Order")
+                            .font(.system(size: 24))
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                        Spacer().frame(height:20)
+                        DescriptionText(description: "Origin Farm:", value: scannedOrder.originFarm)
+                        DescriptionText(description: "Produce Name:", value: scannedOrder.produceName)
+                        DescriptionText(description: "Quantity:", value: String(scannedOrder.quantity))
+                        DescriptionText(description: "Price:", value: String(scannedOrder.price))
+                        DescriptionText(description: "Harvest Time:", value: scannedOrder.harvestTime ?? "")
+                        DescriptionText(description: "Notes from farmer:", value: scannedOrder.farmerNotes ?? "")
+                        Spacer().frame(height:50)
+                        //button
+                        HStack{
+                            Spacer()
+                            Button("Confirm") {
+                                let updateOrderStatusRequest = UpdateOrderStatusRequest(
+                                    id: scannedOrder.id,
+                                    destinationRestaurant: scannedOrder.destinationRestaurant,
+                                    orderStatus: 4 // Delivered
+                                )
+                                let request = APIRequest()
+                                request.postRequest(requestType:"PUT", requestBody: updateOrderStatusRequest, endpoint: "/order/update") { result in
+                                    switch result {
+                                    case .success(let data):
+                                        self.responseData = data
+                                    case .failure(let error):
+                                        self.errorMessage = "Error: \(error)"
+                                    }
+                                }
+                                print("LETS SEE", scannedOrder.produceName,
+                                      " | ",scannedOrder.quantity,
+                                      " | ",scannedOrder.price,
+                                      " | ",scannedOrder.harvestTime ?? "",
+                                      " | ",scannedOrder.originFarm,
+                                      " | ",scannedOrder.farmerNotes  ?? "")
+                                let updateGroceryList = GroceryList(
+                                    id:"",
+                                    groceryName: scannedOrder.produceName,
+                                    quantity: scannedOrder.quantity,
+                                    price: scannedOrder.price ,
+                                    harvestTime: scannedOrder.harvestTime ?? "",
+                                    originFarm: scannedOrder.originFarm,
+                                    farmerNotes: scannedOrder.farmerNotes ?? ""
+                                )
+                                let updateRequest = APIRequest()
+                                updateRequest.postRequest(requestType:"POST", requestBody: updateGroceryList, endpoint: "/restaurant/grocery/update") { result in
+                                    switch result {
+                                    case .success(let data):
+                                        self.responseData = data
+                                    case .failure(let error):
+                                        self.errorMessage = "Error: \(error)"
+                                    }
+                                }
+                                isShowingScanner = false
+                                isShowingScannedPopup = false
+                            }
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            Spacer()
+                        }
                     }
+                    Spacer()
                 }
-                print("LETS SEE", scannedOrder.produceName,
-                      " | ",scannedOrder.quantity,
-                      " | ",scannedOrder.price,
-                      " | ",scannedOrder.harvestTime ?? "",
-                      " | ",scannedOrder.originFarm,
-                      " | ",scannedOrder.farmerNotes  ?? "")
-                let updateGroceryList = GroceryList(
-                    id:"",
-                    groceryName: scannedOrder.produceName,
-                    quantity: scannedOrder.quantity,
-                    price: scannedOrder.price ,
-                    harvestTime: scannedOrder.harvestTime ?? "",
-                    originFarm: scannedOrder.originFarm,
-                    farmerNotes: scannedOrder.farmerNotes ?? ""
-                )
-                let updateRequest = APIRequest()
-                updateRequest.postRequest(requestType:"POST", requestBody: updateGroceryList, endpoint: "/restaurant/grocery/update") { result in
-                    switch result {
-                    case .success(let data):
-                        self.responseData = data
-                    case .failure(let error):
-                        self.errorMessage = "Error: \(error)"
-                    }
-                }
-                isShowingScanner = false
-                isShowingScannedPopup = false
+                .frame(width:geometry.size.width*0.8, height: geometry.size.height*0.7)
+                .padding()
+                .background(Color.white)
+                .cornerRadius(12)
+                .shadow(radius: 10)
+                Spacer()
             }
-            .padding()
-            .background(Color.green)
-            .foregroundColor(.white)
-            .cornerRadius(8)
+            
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(radius: 10)
     }
 }
 

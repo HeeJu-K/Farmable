@@ -1,0 +1,96 @@
+/* memu.module.css */
+.container {
+    font-family: 'Arial', sans-serif;
+}
+
+.navbar {
+    /* background-color: #333; */
+    color: #36A63A;
+    padding: 7px 0;
+}
+
+.tabs-container {
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.tabs {
+    display: flex;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.tabs li {
+    margin-right: 20px;
+}
+
+.tabs li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.tabs li a:hover {
+    text-decoration: underline;
+}
+
+.menutype {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.itemcontainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.iteminfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dishname {
+    font-size: 24px;
+}
+
+.description {
+    color: gray;
+    flex-direction: row;
+}
+
+.left,
+.right {
+    padding: 0 10px;
+}
+
+.right {
+    margin-left: auto;
+}
+
+.addButton {
+    color: #36A63A;
+    background-color: transparent;
+    border: solid 1px #36A63A;
+    border-radius: 12px;
+    padding: 3px 6px;
+}
+
+.iconButton {
+    color: #36A63A;
+    background-color: transparent;
+    border: solid 1px #36A63A;
+    border-radius: 10px;
+}
+
+.divider {
+    padding: 10px 0;
+    flex: 0 0 20px;
+}
+
+.divider::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: rgb(225, 225, 225);
+}

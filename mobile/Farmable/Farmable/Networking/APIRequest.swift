@@ -15,9 +15,9 @@ enum APIError: Error {
 }
 
 struct APIRequest {
-//    let requestURL = "http://localhost:8080" //local
-    let requestURL = "http://10.0.0.2:8080" //global home
-//    let requestURL = "http://10.19.179.108:8080" // global school
+    let requestURL = "http://localhost:8080" //local
+//    let requestURL = "http://10.0.0.2:8080" //global home
+//    let requestURL = "http://10.18.98.85:8080" // global school
     
     
     func postRequest<T: Codable> (requestType:String, requestBody: T, endpoint: String, completion: @escaping(Result<String, APIError>) -> Void ) {

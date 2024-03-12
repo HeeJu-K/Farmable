@@ -126,14 +126,17 @@ struct Restaurant_Menu: View {
                         }
                     }
                     // Add button
-                    Button("+") {
+                    Button(action: {
                         self.showingAddItem = true
+                    }) {
+                        Image(systemName: "plus.circle")
+                            .resizable()
+                            .foregroundColor(.green)
+                            .frame(width: 40, height: 40)
+                            .scaledToFit()
                     }
-                        .frame(width: 40, height: 40)
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(20)
                         .position(x: geometry.size.width - 50, y: geometry.size.height - 80)
+
                     // modal view
                     if showingPopUp {
                         Color.black.opacity(0.4)
@@ -216,17 +219,29 @@ struct AddItemPopUpView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack{
-                TextField("Enter dish name", text:$dishName)
-                TextField("Enter price", text:$price)
-                TextField("Enter dish description", text:$dishDescription)
-                Toggle("Active?", isOn: $isActive)
-                Toggle("Special?", isOn: $isSpecial)
+                HStack{
+                    VStack(alignment: .leading){
+                        Text("Dish Name")
+                            .frame(height:50)
+                        Text("Price").frame(height:50)
+                        Text("Description").frame(height:50)
+                        Text("Active?").frame(height:50)
+                        Text("Special?").frame(height:50)
+                    }.frame(width: geometry.size.width*0.3)
+                    VStack{
+                        TextField("Enter dish name", text:$dishName).frame(height:50)
+                        TextField("Enter price", text:$price).frame(height:50)
+                        TextField("Enter dish description", text:$dishDescription).frame(height:50)
+                        Toggle("", isOn: $isActive).frame(height:50)
+                        Toggle("", isOn: $isSpecial).frame(height:50)
+                        
+                    }.frame(width: geometry.size.width*0.7)
+                }
                 HStack{
                     Text("Menu Type")
                     Spacer()
                     DropdownView(selectedMenuType: $menuType)
                         .frame(width: geometry.size.width*0.6)
-                    
                 }
                 Button("save") {
                     let newDishItem = DishItem(
@@ -249,11 +264,13 @@ struct AddItemPopUpView: View {
                         }
                     }
                 }
-                    .padding(5)
-                    .background(Color.green)
-                    .cornerRadius(5)
-                    .foregroundColor(.white)
+                .frame(width: 75, height:40)
+                .background(Color.green)
+                .cornerRadius(20)
+                .foregroundColor(.white)
+                
             }
+            
         }
     }
 }
@@ -267,15 +284,15 @@ struct DropdownView: View {
         ScrollView (.horizontal) {
             HStack{
                 Button("Create") {}
-                    .padding(2)
-                    .cornerRadius(2)
-                    .background(Color.green)
-                    .foregroundColor(Color.white)
+                    .padding(5)
+                    .foregroundColor(.white)
+                    .background(RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.green))
                 ForEach(menuTypes, id:\.self) {menuType in
                     Button(menuType) {selectedMenuType = menuType}
-                        .padding(2)
-                        .overlay(RoundedRectangle(cornerRadius: 2)
-                                    .stroke(Color.green))
+                        .padding(5)
+                        .overlay(RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.green))
                 }
             }
         }

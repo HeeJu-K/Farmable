@@ -43,63 +43,30 @@ struct Restaurant_Order: View {
             GeometryReader { geometry in
                 ZStack {
                     VStack{
-                        HStack {
-                            Button(action: {
-                                self.selectedTab = 0
-                            }) {
-                                Text("Active Order")
-                                    .padding()
-                                    .background(self.selectedTab == 0 ? Color.green : Color.clear)
-                                    .foregroundColor(self.selectedTab == 0 ? .white : .black)
-                            }
-                            
-                            Button(action: {
-                                self.selectedTab = 1
-                            }) {
-                            Text("Order History")
-                                .padding()
-                                .background(self.selectedTab == 1 ? Color.green : Color.clear)
-                                .foregroundColor(self.selectedTab == 1 ? .white : .black)
-                            }
-                        }
-                        .cornerRadius(10)
-                        .border(.green)
-//                        ScrollView {
-                            //display active order view
-                            if selectedTab == 0 {
-                                VStack(spacing:150){
-                                    if !responseData.isEmpty {
-                                        
-                                        ForEach(responseData, id: \.id) { orderRequest in
-                                            if orderRequest.orderStatus < 6 {
-                                                ActiveOrder(orderRequest: orderRequest)
-                                            }
-                                        }
-                                        
-                                    } else {
-                                        Text("Data is loading...")
-                                    }
+                        HStack{
+                            Spacer()
+                            HStack {
+                                Button(action: {
+                                    self.selectedTab = 0
+                                }) {
+                                    Text("Active Order")
+                                        .padding()
+                                        .background(self.selectedTab == 0 ? Color.green : Color.clear)
+                                        .foregroundColor(self.selectedTab == 0 ? .white : .black)
                                 }
-                                
-                            }
-//                        }
-                        ScrollView {
-                            //display completed order view
-                            if selectedTab == 1{
-                                VStack{
-                                    if !responseData.isEmpty {
-                                        ForEach(responseData, id: \.id) { orderRequest in
-                                            if orderRequest.orderStatus >= 4 {
-                                                FinishedOrder(orderRequest: orderRequest)
-                                            }
-                                        }
-                                        
-                                    } else {
-                                        Text("Data is loading...")
-                                    }
+
+                                Button(action: {
+                                    self.selectedTab = 1
+                                }) {
+                                    Text("Order History")
+                                        .padding()
+                                        .background(self.selectedTab == 1 ? Color.green : Color.clear)
+                                        .foregroundColor(self.selectedTab == 1 ? .white : .black)
                                 }
                             }
-                            
+                            .background(Color.gray.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            Spacer()
                         }
                         //fetch data
                         .onAppear {
@@ -118,7 +85,41 @@ struct Restaurant_Order: View {
                                 }
                             }
                         }
-                        
+                        //display active order view
+                        if selectedTab == 0 {
+                            ScrollView {
+                                VStack(spacing:150){
+                                    if !responseData.isEmpty {
+                                        ForEach(responseData, id: \.id) { orderRequest in
+                                            if orderRequest.orderStatus < 6 {
+                                                ActiveOrder(user:"Restaurant", orderRequest: orderRequest)
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        Text("Data is loading...")
+                                    }
+                                }
+                                
+                            }
+                        }
+                        //display completed order view
+                        if selectedTab == 1{
+                            ScrollView {
+                                VStack(spacing:150){
+                                    if !responseData.isEmpty {
+                                        ForEach(responseData, id: \.id) { orderRequest in
+                                            if orderRequest.orderStatus >= 4 {
+                                                FinishedOrder(orderRequest: orderRequest)
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        Text("Data is loading...")
+                                    }
+                                }
+                            }
+                        }
                     }
                     
                 }

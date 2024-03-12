@@ -10,7 +10,6 @@ import SwiftUI
 struct FarmerView: View {
     var body: some View {
         TabView {
-            
             Farmer_Order()
                 .tabItem() {
                     Image(systemName: "shippingbox")

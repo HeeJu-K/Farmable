@@ -73,7 +73,7 @@ struct OrderDetails: View {
     }
     
     @State private var farmerNotes: String = ""
-    @State private var showQRCode: Bool = true
+    @State private var showQRCode: Bool = false
     @State private var updatedOrder: OrderRequest
 
     
@@ -250,23 +250,36 @@ struct OrderDetails: View {
                                     lastUpdateTime:"Current time"
                                 )
                             }) {
-                                Label("Generate QR Code", systemImage: "qrcode")
-                                    .padding(10)
-                                    .foregroundColor(.white)
-                                    .background(Color.green)
-                                    .cornerRadius(7)
+                                if !showQRCode{
+                                    Label("Generate QR Code", systemImage: "qrcode")
+                                        .padding(10)
+                                        .foregroundColor(.white)
+                                        .background(Color.green)
+                                        .cornerRadius(7)
+                                } else {
+                                    VStack{
+                                        Text("Print out your QRCode!")
+                                        Spacer()
+                                            .frame(height:20)
+                                        HStack{
+                                            Spacer()
+                                            QRCodeView(image: generateQRCode(from: updatedOrder))
+                                            Spacer()
+                                        }
+                                    }
+                                }
                             }
                             Spacer()
                         }
-                        if showQRCode {
-                            Spacer()
-                                .frame(height:20)
-                            HStack{
-                                Spacer()
-                                QRCodeView(image: generateQRCode(from: updatedOrder))
-                                Spacer()
-                            }
-                        }
+//                        if showQRCode {
+//                            Spacer()
+//                                .frame(height:20)
+//                            HStack{
+//                                Spacer()
+//                                QRCodeView(image: generateQRCode(from: updatedOrder))
+//                                Spacer()
+//                            }
+//                        }
                     }
                     Spacer()
                         .frame(width: 40)

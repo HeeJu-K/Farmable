@@ -76,68 +76,126 @@ struct Restaurant_Inventory: View {
             VStack{
                 Spacer()
                 HStack{
+                    
                     Spacer()
+                    // the sheet
                     VStack{
-                        Text(activeRequestItem?.groceryName ?? "")
-                            .font(.largeTitle)
-                        HStack{
-                            Spacer()
-                            Text("Farm:")
-                            Text(activeRequestItem?.originFarm ?? "")
-                            Spacer()
-                        }
-                        HStack{
-                            Spacer()
-                            Text("Price:")
-                            TextField("Price per Ibs", value: $price, formatter: NumberFormatter())
-                            Text(" per Ibs")
-                            Spacer()
-                        }
-                        HStack{
-                            Spacer()
-                            Text("Quantity:")
-                            TextField("Quantity", value: $quantity, formatter: NumberFormatter())
-                            Text(" Ibs")
-                            Spacer()
-                        }
-                        HStack{
-                            Spacer()
-                            Text("Special Notes to Farmer:")
-                            TextField("Please write down notes to farmer if any", text: $restaurantNotes)
-                            Spacer()
-                        }
-                        Button("Request") {
-                            let orderRequest = OrderPostRequest(
-                                id: id,
-                                produceName: activeRequestItem?.groceryName ?? "",
-                                originFarm: activeRequestItem?.originFarm ?? "",
-                                destinationRestaurant: "This Restaurant",
-                                orderStatus: orderStatus,
-                                quantity: quantity,
-                                price: price,
-                                timestamp: timestamp,
-                                lastUpdateTime: lastUpdateTime,
-                                restaurantNotes: restaurantNotes
-                            )
-                            let request = APIRequest()
-                            request.postRequest(requestType:"POST", requestBody: orderRequest, endpoint: "/order/create") { result in
-                                switch result {
-                                case .success(let data):
-                                    self.responseData = data
-                                case .failure(let error):
-                                    self.errorMessage = "Error: \(error)"
+                        ScrollView{
+                            //sheet
+                            VStack{
+                                Spacer().frame(height:geometry.size.height*0.1)
+                                HStack{
+                                    Spacer().frame(width:20)
+                                    //sheet content
+                                    VStack(alignment: .leading){
+                                        // Title
+                                        Text(activeRequestItem?.groceryName ?? "")
+                                            .font(.largeTitle)
+                                            .fontWeight(.bold)
+                                        Spacer().frame(height:30)
+                                        // Details
+                                        Group{
+                                            HStack{
+                                                Text("Farm:")
+                                                    .foregroundColor(.gray)
+                                                    .font(.system(size: 14))
+                                                Spacer()
+                                                Text(activeRequestItem?.originFarm ?? "")
+                                                Spacer()
+                                            }
+                                            HStack{
+                                                Text("Price:")
+                                                    .foregroundColor(.gray)
+                                                    .font(.system(size: 14))
+                                                Spacer()
+                                                TextField("Price per Ibs", value: $price, formatter: NumberFormatter())
+                                                    .frame(width:geometry.size.width*0.2)
+                                                    .padding(5)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .stroke(Color.gray, lineWidth: 0.3)
+                                                    )
+                                                Text(" per Ibs")
+                                                Spacer().frame(width:10)
+                                            }
+                                            
+                                            HStack{
+                                                Text("Quantity:")
+                                                    .foregroundColor(.gray)
+                                                    .font(.system(size: 14))
+                                                Spacer()
+                                                TextField("Quantity", value: $quantity, formatter: NumberFormatter())
+                                                    .frame(width:geometry.size.width*0.2)
+                                                    .padding(5)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .stroke(Color.gray, lineWidth: 0.3)
+                                                    )
+                                                Text(" Ibs")
+                                                Spacer().frame(width:10)
+                                            }
+                                            HStack{
+                                                Text("Notes to Farmer:")
+                                                    .foregroundColor(.gray)
+                                                    .font(.system(size: 14))
+                                                //                                        TextField("Please write down notes to farmer if any", text: $restaurantNotes)
+                                                TextEditor(text: $restaurantNotes)
+                                                    .frame(width: 180, height: 50)
+                                                    .padding()
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 10)
+                                                            .stroke(Color.gray, lineWidth: 0.3)
+                                                    )
+                                                    .padding(5)
+                                                Spacer()
+                                            }
+                                        }
+                                        Spacer().frame(height:30)
+                                        // Request Button
+                                        HStack{
+                                            Spacer()
+                                            Button("Request") {
+                                                let orderRequest = OrderPostRequest(
+                                                    id: id,
+                                                    produceName: activeRequestItem?.groceryName ?? "",
+                                                    originFarm: activeRequestItem?.originFarm ?? "",
+                                                    destinationRestaurant: "Ethan Stowell",
+                                                    orderStatus: orderStatus,
+                                                    quantity: quantity,
+                                                    price: price,
+                                                    timestamp: timestamp,
+                                                    lastUpdateTime: lastUpdateTime,
+                                                    restaurantNotes: restaurantNotes
+                                                )
+                                                let request = APIRequest()
+                                                request.postRequest(requestType:"POST", requestBody: orderRequest, endpoint: "/order/create") { result in
+                                                    switch result {
+                                                    case .success(let data):
+                                                        self.responseData = data
+                                                    case .failure(let error):
+                                                        self.errorMessage = "Error: \(error)"
+                                                    }
+                                                }
+                                            }
+                                            .padding(5)
+                                            .background(Color.green)
+                                            .cornerRadius(5)
+                                            .foregroundColor(.white)
+                                            Spacer()
+                                        }
+                                    }
+                                    Spacer().frame(width:20)
                                 }
+                                Spacer().frame(height:geometry.size.height*0.1)
                             }
                         }
-                            .padding(5)
-                            .background(Color.green)
-                            .cornerRadius(5)
-                            .foregroundColor(.white)
                     }
-                    .frame(width: geometry.size.width*0.8, height:geometry.size.height*0.5)
-                    .background(Color.white)
+                        .frame(width: geometry.size.width*0.8, height:geometry.size.height*0.6)
+                        .background(Color.white)
+                        .cornerRadius(20)
                     Spacer()
                 }
+                
                 Spacer()
             }
         }

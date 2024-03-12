@@ -29,13 +29,13 @@ struct Farmer_Order: View {
     @State private var responseData: [OrderRequest] = []
     @State private var errorMessage: String?
     var body: some View {
-        NavigationView {
-            GeometryReader { geometry in
-                ZStack {
-                    
-                    VStack{
+        GeometryReader { geometry in
+            ZStack (alignment: .top){
+                
+                VStack{
+                    HStack{
+                        Spacer()
                         HStack {
-                            Spacer()
                             Button(action: {
                                 self.selectedTab = 0
                             }) {
@@ -44,7 +44,7 @@ struct Farmer_Order: View {
                                     .background(self.selectedTab == 0 ? Color.green : Color.clear)
                                     .foregroundColor(self.selectedTab == 0 ? .white : .black)
                             }
-                            
+
                             Button(action: {
                                 self.selectedTab = 1
                             }) {
@@ -53,87 +53,80 @@ struct Farmer_Order: View {
                                     .background(self.selectedTab == 1 ? Color.green : Color.clear)
                                     .foregroundColor(self.selectedTab == 1 ? .white : .black)
                             }
-                            Spacer()
                         }
-                        .cornerRadius(10)
-                        .border(.green)
-//                        ScrollView {
-                            //display active order view
-                            if selectedTab == 0 {
-                                VStack(spacing:0){
-                                    if !responseData.isEmpty {
-//
-                                        ForEach(responseData, id: \.id) { orderRequest in
-                                            if orderRequest.orderStatus < 4 {
-
-                                                Button(action: {
-                                                    self.selectedOrderRequest = orderRequest
-                                                    self.navigateToOrderDetails = true
-                                                }) {
-                                                    ActiveOrder(orderRequest: orderRequest)
-                                                }
-//                                                Spacer()
-//                                                    .frame(height: 10)
-//                                                ActiveOrder(orderRequest: orderRequest)
-                                            }
-                                        }
-//
-                                    } else {
-                                        Text("Data is loading...")
-                                    }
+                        .background(Color.gray.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        Spacer()
+                    }
+                    .onAppear {
+                        let request = APIRequest()
+                        request.getRequest(endpoint: "/order") { result in
+                            switch result {
+                            case .success(let data):
+                                do {
+                                    let responseData = try JSONDecoder().decode([OrderRequest].self, from: data)
+                                    self.responseData = responseData
+                                } catch {
+                                    print("Error decoding JSON: \(error)")
                                 }
-                                
+                            case .failure(let error):
+                                self.errorMessage = "Error: \(error)"
                             }
                         }
-//                        .frame(height: geometry.size.height*0.8)
+                    }
+                    
+                    //display active order view
+                    if selectedTab == 0 {
                         ScrollView {
-                            //display completed order view
-                            if selectedTab == 1{
-                                VStack{
-                                    if !responseData.isEmpty {
-                                        ForEach(responseData, id: \.id) { orderRequest in
-                                            if orderRequest.orderStatus >= 4 {
-                                                FinishedOrder(orderRequest: orderRequest)
+                            VStack(spacing:150){
+                                if !responseData.isEmpty {
+                                    ForEach(responseData, id: \.id) { orderRequest in
+                                        if orderRequest.orderStatus < 4 {
+                                            Button(action: {
+                                                self.selectedOrderRequest = orderRequest
+                                                self.navigateToOrderDetails = true
+                                            }) {
+                                                ActiveOrder(user:"Farmer", orderRequest: orderRequest)
                                             }
                                         }
-
-                                    } else {
-                                        Text("Data is loading...")
                                     }
+                                } else {
+                                    Text("Data is loading...")
                                 }
                             }
-                            
-                        }
-                        //fetch data
-                        .onAppear {
-                            let request = APIRequest()
-                            request.getRequest(endpoint: "/order") { result in
-                                switch result {
-                                case .success(let data):
-                                    do {
-                                        let responseData = try JSONDecoder().decode([OrderRequest].self, from: data)
-                                        self.responseData = responseData
-                                    } catch {
-                                        print("Error decoding JSON: \(error)")
-                                    }
-                                case .failure(let error):
-                                    self.errorMessage = "Error: \(error)"
-                                }
-                            }
-                        }
-                        if let selectedOrderRequest = selectedOrderRequest {
-                            NavigationLink(destination: OrderDetails(orderRequest: selectedOrderRequest), isActive: $navigateToOrderDetails) {
-                                EmptyView()
-                            }
-                        }
                         
-//                    }
+                        }
+                    }
+                    
+                    //display completed order view
+                    if selectedTab == 1{
+                        ScrollView {
+                            VStack(spacing:150){
+                                if !responseData.isEmpty {
+                                    ForEach(responseData, id: \.id) { orderRequest in
+                                        if orderRequest.orderStatus >= 4 {
+                                            FinishedOrder(orderRequest: orderRequest)
+                                        }
+                                    }
+                                    
+                                } else {
+                                    Text("Data is loading...")
+                                }
+                            }
+                        }
+                    }
+                
+                    if let selectedOrderRequest = selectedOrderRequest {
+                        NavigationLink(destination: OrderDetails(orderRequest: selectedOrderRequest), isActive: $navigateToOrderDetails) {
+                            EmptyView()
+                        }.hidden()
+                    }
                 }
             }
         }
     }
-    
 }
+
 
 struct Farmer_Order_Previews: PreviewProvider {
     static var previews: some View {

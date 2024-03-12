@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { PassThrough } from 'stream';
 
+import { URL } from '../../lib/constants';
+
 
 export default function Order() {
 
@@ -12,7 +14,9 @@ export default function Order() {
     const [farmerFeedback, setFarmerFeedback] = useState('');
     const [restaurantFeedback, setRestaurantFeedback] = useState('');
 
-    const url = 'http://10.19.179.108:8080/';
+    // const url = 'http://10.18.98.85:8080/'; // school
+    // // const url = 'http://10.19.179.108:8080/'; //home 
+
 
 
     const userList = Cookies.get('userList');
@@ -29,7 +33,7 @@ export default function Order() {
         e.preventDefault();
 
         try {
-            const response = await fetch(url+'users/update', {
+            const response = await fetch(URL+'users/update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +57,7 @@ export default function Order() {
         e.preventDefault();
 
         try {
-            const response = await fetch(url+'users/update', {
+            const response = await fetch(URL+'users/update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,6 +86,7 @@ export default function Order() {
 
     return (
         <div>
+            <h1></h1>
             {parsedItems.map((parsedItem) => (
                 <div>
                     <p>{parsedItem.dishName}</p>

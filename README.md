@@ -33,6 +33,9 @@ To get started with Farmable, follow these steps:
 4. Configure any environment variables required for your setup.
 5. Run the application and start exploring its features!
 
+`mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Dserver.address=0.0.0.0"
+`
+
 ## Contributing
 
 We welcome contributions from the community to further enhance Farmable. If you're interested in contributing, please follow these guidelines:

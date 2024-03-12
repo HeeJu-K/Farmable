@@ -7,6 +7,9 @@ import Cookies from 'js-cookie';
 
 import { fetchData } from './api/menu';
 
+import styles from './menu.module.css';
+import { FaPlus, FaMinus } from 'react-icons/fa';
+
 export async function getServerSideProps(context) {
   const menuItems = await fetchData("restaurant/menu");
 
@@ -88,6 +91,8 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
     return acc;
   }, {})
 
+  console.log("menuByType", menuByType)
+
   const handleSelectItem = (event, selectedItem) => {
     event.stopPropagation();
     setSelectedItems((prevItems) => {
@@ -99,6 +104,51 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
         return [...prevItems, selectedItem];
       }
     });
+  };
+
+  const [cartItems, setCartItems] = useState(new Map());
+
+  const addToCart = (product) => {
+    setCartItems(prevItems => {
+      const updatedItems = new Map(prevItems);
+      if (updatedItems.has(product.id)) {
+        const item = updatedItems.get(product.id);
+        updatedItems.set(product.id, { ...item, quantity: item.quantity + 1 });
+      } else {
+        updatedItems.set(product.id, { ...product, quantity: 1 });
+      }
+      return updatedItems;
+    });
+  };
+
+  const removeFromCart = (productId) => {
+    setCartItems(prevItems => {
+      const updatedItems = new Map(prevItems);
+      if (updatedItems.has(productId)) {
+        const item = updatedItems.get(productId);
+        if (item.quantity > 0) {
+          updatedItems.set(productId, { ...item, quantity: item.quantity - 1 });
+        }
+      }
+      return updatedItems;
+    });
+  };
+  const handleAddItem = (item) => {
+    setCartItems(prevItems => {
+      const updatedItems = new Map(prevItems);
+      const existingItem = updatedItems.get(item.id);
+      updatedItems.set(item.id, { ...item, quantity: (existingItem ? existingItem.quantity + 1 : 1) });
+      return updatedItems;
+    });
+  };
+
+  const handleRemoveItem = (item) => {
+    setSelectedItems(selectedItems.map(item => {
+      if (item.id === id && item.count > 0) {
+        return { ...item, count: item.count - 1 };
+      }
+      return item;
+    }));
   };
 
   const showItemDetails = (selectedProduce) => {
@@ -120,27 +170,76 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
   }
 
   return (
-    <div>
+    <div className={styles.container}>
+      <nav className={styles.navbar}>
+        <div className={styles.tabsContainer}>
+          <ul className={styles.tabs}>
+            {Object.entries(menuByType).map(([type, items]) => (
+              <li>{type}</li>
+            ))}
+          </ul>
+        </div>
+      </nav>
       {Object.entries(menuByType).map(([type, items]) => (
         <div key={type}>
-          <h2>{type}</h2>
-          {items.map((item) => (
-            <div key={item.id} >
-              <button type="button" onClick={(event) => handleSelectItem(event, item)}>{selectedItems.includes(item) ? 'selected' : 'select'}</button>
-              <div>{item.dishName} - ${item.price}</div>
-              {item.ingredients.map((ingredient) => {
-                if (ingredient.produce) {
-                  return (<span onClick={() => showItemDetails( ingredient)} style={{ color: 'green' }}>{ingredient.name}, </span>)
-                } else {
-                  return (<span>{ingredient.name}, </span>)
-                }
-              }
-              )}
-            </div>
-          ))}
+          <div className={styles.menutype}>{type}</div>
+          <div class={styles.divider}></div>
+          {items.map(item => {
+            const cartItem = cartItems.get(item.id);
+            const quantity = cartItem ? cartItem.quantity : 0;
+            return (
+              <div key={item.id} className={styles.itemcontainer}>
+                <div className={styles.iteminfo} >
+                  <div className={`${styles.dishname} ${styles.left}`}>{item.dishName}</div>
+                  <div className={`${styles.dishprice} ${styles.right}`}>${item.price}</div>
+                </div>
+                <div className={styles.description}>
+                  {item.ingredients.map((ingredient) => {
+                    if (ingredient.produce) {
+                      return (<span onClick={() => showItemDetails(ingredient)} style={{ color: 'green' }}>{ingredient.name}, </span>)
+                    } else {
+                      return (<span>{ingredient.name}, </span>)
+                    }
+                  }
+                  )}
+                </div>
+                <div className={styles.right}>
+                  {quantity ?
+                    <div className={styles.right}>
+                      <button className={styles.iconButton} onClick={() => removeFromCart(item.id)}>
+                        <FaMinus />
+                      </button>
+                      {quantity}
+                      <button className={styles.iconButton} onClick={() => addToCart(item)}>
+                        <FaPlus />
+                      </button>
+                    </div>
+                    :
+                    <button className={styles.addButton} onClick={() => addToCart(item)}>Add</button>
+                  }
+
+                </div>
+                <div class={styles.divider}></div>
+              </div>
+            );
+          })}
         </div>
-      ))}
-      <button onClick={() => submitOrder()}>Place Order</button>
+      ))
+      }
+      <div>
+        <h3>Cart Items</h3>
+        {[...cartItems.values()].map(item => (
+          <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div>
+              <div>{item.dishName}</div>
+              <div>{item.price}</div>
+              <div>Quantity: {item.quantity}</div>
+            </div>
+            <button onClick={() => removeFromCart(item.id)}>Remove from Cart</button>
+          </div>
+        ))}
+      </div>
+      <button className={styles.addButton} onClick={() => submitOrder()}>Place Order</button>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} content={(
         <div>
@@ -150,6 +249,6 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
         </div>
       )} />
 
-    </div>
+    </div >
   );
 }

@@ -35,7 +35,6 @@ struct LoginPage: View {
         
         NavigationView {
             ZStack {
-                
                 Color.green
                     .ignoresSafeArea()
                 Circle()
@@ -49,27 +48,28 @@ struct LoginPage: View {
                         .font(.largeTitle)
                         .bold()
                         .padding()
+                    // tab
                     HStack {
-                            Button(action: {
-                                self.selectedTab = 0
-                            }) {
-                                Text("Farmer")
-                                    .padding()
-                                    .background(self.selectedTab == 0 ? Color.green : Color.clear)
-                                    .foregroundColor(self.selectedTab == 0 ? .white : .black)
-                            }
-                            
-                            Button(action: {
-                                self.selectedTab = 1
-                            }) {
-                                Text("Restaurant")
-                                    .padding()
-                                    .background(self.selectedTab == 1 ? Color.green : Color.clear)
-                                    .foregroundColor(self.selectedTab == 1 ? .white : .black)
-                            }
+                        Button(action: {
+                            self.selectedTab = 0
+                        }) {
+                            Text("Farmer")
+                                .padding()
+                                .background(self.selectedTab == 0 ? Color.green : Color.clear)
+                                .foregroundColor(self.selectedTab == 0 ? .white : .black)
                         }
-                        .cornerRadius(10)
-                        .border(.green)
+                        
+                        Button(action: {
+                            self.selectedTab = 1
+                        }) {
+                            Text("Restaurant")
+                                .padding()
+                                .background(self.selectedTab == 1 ? Color.green : Color.clear)
+                                .foregroundColor(self.selectedTab == 1 ? .white : .black)
+                        }
+                    }
+                    .cornerRadius(10)
+                    .border(.green)
                         
                     TextField("Username", text: $username)
                         .padding()
@@ -91,10 +91,10 @@ struct LoginPage: View {
                     Button("Login") {
                         authenticateUser(username: username, password: password)
                     }
-                    .foregroundColor(.white)
-                    .frame(width: 300, height: 50)
-                    .background(Color.green)
-                    .cornerRadius(10)
+                        .foregroundColor(.white)
+                        .frame(width: 300, height: 50)
+                        .background(Color.green)
+                        .cornerRadius(10)
                     Button("Register") {
                         let newUser = UserInfo(
                             id: "",
@@ -126,11 +126,13 @@ struct LoginPage: View {
                     NavigationLink(destination: destinationView, isActive: $isNavigate) {
                         EmptyView()
                     }
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
                 }
             }
-            
         }
     }
+        
     func authenticateUser(username: String, password:String) {
         if username.lowercased() == "" {
             wrongUsername = 0

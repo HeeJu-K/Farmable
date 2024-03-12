@@ -33,6 +33,8 @@
 		5296739B2B8B2BB30048812F /* FinishedOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5296739A2B8B2BB30048812F /* FinishedOrder.swift */; };
 		52B3117B2B8F235F00C727AE /* PhotosPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3117A2B8F235F00C727AE /* PhotosPicker.swift */; };
 		52B3117D2B91BBBD00C727AE /* EditProfileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3117C2B91BBBD00C727AE /* EditProfileInfo.swift */; };
+		52FFC6562B9CF0D7008649CF /* FeedbackPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FFC6552B9CF0D7008649CF /* FeedbackPage.swift */; };
+		52FFC6582B9D4DF7008649CF /* DescriptionText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FFC6572B9D4DF7008649CF /* DescriptionText.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +65,8 @@
 		5296739A2B8B2BB30048812F /* FinishedOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedOrder.swift; sourceTree = "<group>"; };
 		52B3117A2B8F235F00C727AE /* PhotosPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPicker.swift; sourceTree = "<group>"; };
 		52B3117C2B91BBBD00C727AE /* EditProfileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileInfo.swift; sourceTree = "<group>"; };
+		52FFC6552B9CF0D7008649CF /* FeedbackPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackPage.swift; sourceTree = "<group>"; };
+		52FFC6572B9D4DF7008649CF /* DescriptionText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionText.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +93,8 @@
 				5232D11A2B92756F00CB69F8 /* OrderDetails.swift */,
 				528E68A72B95870700BED62B /* ImageViewController.swift */,
 				528E68A92B95C4FD00BED62B /* ScannerViewController.swift */,
+				52FFC6552B9CF0D7008649CF /* FeedbackPage.swift */,
+				52FFC6572B9D4DF7008649CF /* DescriptionText.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -252,9 +258,11 @@
 				528E68A82B95870700BED62B /* ImageViewController.swift in Sources */,
 				5232D1192B91CF6F00CB69F8 /* EditRestaurantDescription.swift in Sources */,
 				5288CD602B76224000634AF5 /* RestaurantView.swift in Sources */,
+				52FFC6582B9D4DF7008649CF /* DescriptionText.swift in Sources */,
 				5296739B2B8B2BB30048812F /* FinishedOrder.swift in Sources */,
 				52374B6C2B71873900F87663 /* Farmer_Profile.swift in Sources */,
 				5288CD642B76244000634AF5 /* Restaurant_Menu.swift in Sources */,
+				52FFC6562B9CF0D7008649CF /* FeedbackPage.swift in Sources */,
 				5232D11B2B92756F00CB69F8 /* OrderDetails.swift in Sources */,
 				52132D632B889F27000E504A /* Order.swift in Sources */,
 				5288CD622B76240800634AF5 /* Restaurant_Order.swift in Sources */,

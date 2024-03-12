@@ -44,7 +44,7 @@ struct Farmer_Profile: View {
     @State private var isEditingProfileInfo = false
     @State private var isEditingFarmerDescription = false
     @State private var isEditingFarmDescription = false
-
+    @State private var isShowingFeedback = false
 
     var collapsedProfileView: some View {
        
@@ -54,7 +54,7 @@ struct Farmer_Profile: View {
                 .frame(width:75, height: 75)
                 .cornerRadius(33)
             VStack{
-                Text(farmerName)
+                Text(farmerFirstName + " " + farmerLastName)
                     .font(.system(size: 20))
                 Text("Address")
             }
@@ -69,8 +69,12 @@ struct Farmer_Profile: View {
     var farmerView: some View{
         VStack(alignment: .leading){
             Spacer(minLength: 20)
-            Text("Profile Picture:")
+            Text("Profile Picture")
                 .padding(.leading)
+                .fontWeight(.semibold)
+                .font(.system(size: 20))
+                .foregroundColor(.black)
+            Spacer().frame(height:7)
             if !responseData.isEmpty {
                 Text(responseData[0].teamDescription ?? "")
                     .font(.system(size: 13))
@@ -80,6 +84,7 @@ struct Farmer_Profile: View {
                     .padding(.leading)
                     .multilineTextAlignment(.leading)
             }
+            Spacer().frame(height:7)
             Text("Please provide a picture and a description of yourself, they will be visible to the customers.")
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
@@ -97,6 +102,7 @@ struct Farmer_Profile: View {
             HStack{
                 Spacer()
                 Image(systemName: "chevron.right")
+                Spacer().frame(width: 10)
             }
         }
     }
@@ -105,6 +111,10 @@ struct Farmer_Profile: View {
         VStack(alignment: .leading){
             Text("Farm Description: ")
                 .padding(.leading)
+                .fontWeight(.semibold)
+                .font(.system(size: 20))
+                .foregroundColor(.black)
+            Spacer().frame(height:7)
             if !responseData.isEmpty {
                 Text(responseData[0].locationDescription ?? "")
                     .font(.system(size: 13))
@@ -114,7 +124,7 @@ struct Farmer_Profile: View {
                     .padding(.leading)
                     .multilineTextAlignment(.leading)
             }
-                
+            Spacer().frame(height:7)
             Text("Please provide a picture and a description of your farm, they will be visible to the customers.")
                 .font(.system(size: 13))
                 .foregroundStyle(.gray)
@@ -146,6 +156,7 @@ struct Farmer_Profile: View {
             HStack{
                 Spacer()
                 Image(systemName: "chevron.right")
+                Spacer().frame(width: 10)
             }
         }
     }
@@ -183,7 +194,30 @@ struct Farmer_Profile: View {
                                 }
                             }
                         }
-                        
+                        // feedback section
+                        Spacer().frame(height:20)
+                        Group{
+                            NavigationLink(destination: FeedbackPage(), isActive: $isShowingFeedback){
+                                Text("View Feedback")
+                                    .padding(.leading)
+                                    .fontWeight(.semibold)
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.black)
+                                HStack{
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    Spacer().frame(width: 10)
+                                }
+                            }
+                        }
+                        Spacer().frame(height:20)
+                        HStack{
+                            Spacer()
+                            VStack{
+                                Divider().frame(width:geometry.size.width*0.9)
+                            }
+                            Spacer()
+                        }
                         // fetch farmer profile image
 //                        .onAppear {
 //                            let request = ImageRequest()
@@ -204,8 +238,7 @@ struct Farmer_Profile: View {
                             NavigationLink(destination: EditTeamDescription(isEditingTeamDescription: $isEditingFarmerDescription), isActive: $isEditingFarmerDescription){
                                 farmerView}
                             Spacer(minLength: 15)
-                            HStack
-                            {
+                            HStack{
                                 Spacer()
                                 VStack{
                                     Divider()
@@ -221,13 +254,25 @@ struct Farmer_Profile: View {
                                 farmDescriptionView}
                         }
                     }
-                    if !responseData.isEmpty {
-                        Text("Feedback from customers:")
-                        Text(responseData[0].farmerFeedback ?? "")
-                    } else {
-                        Text("No feedback available")
+                    Group{
+                        Text("See how your produce is being loved!")
+                        HStack{
+                            VStack{
+                                Text("Number of Love")
+                                Text("192")
+                            }
+                            VStack{
+                                Text("Wants to hear more")
+                                Text("192")
+                            }
+                        }
+                        if !responseData.isEmpty {
+                            Text("Feedback from customers:")
+                            Text(responseData[0].farmerFeedback ?? "")
+                        } else {
+                            Text("No feedback available")
+                        }
                     }
-                    
                     
                 }
             }
