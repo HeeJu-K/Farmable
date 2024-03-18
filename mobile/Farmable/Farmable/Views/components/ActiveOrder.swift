@@ -14,7 +14,6 @@ struct ActiveOrder: View {
         self.user = user
         self.orderRequest = orderRequest
     }
-    @State private var selectedTab: Int = 0 //0: active order, 1: order history
     @State private var progress: CGFloat = 1
 
     let status = [

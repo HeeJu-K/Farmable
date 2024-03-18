@@ -24,9 +24,57 @@ extension Color {
     }
 }
 
-struct FeedbackPage: View {
-//    @Binding var isShowingFeedback: Bool
+struct Feedback: Codable {
+    let id: String
+    let senderEntity: String
+    let senderRole: String
+    let receiverEntity: String
+    let receiverRole: String
+    let message: String?
+    let count: Int?
+}
 
+struct CommentView: View {
+    var commentContent: String
+    var commentSenderRole: String
+    var commentSenderEntity: String
+    var body: some View{
+        GeometryReader { geometry in
+            ZStack{
+                Rectangle()
+                    .foregroundColor(Color(hex:"#9E896A"))
+    //                    .frame(height: 230)
+                    .cornerRadius(20)
+                HStack{
+                    Spacer()
+                    VStack(alignment: .leading){
+                        Text(commentContent)
+                            .font(.system(size: 30))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
+                        Spacer()
+                        HStack{
+                            Spacer()
+                            Text("\(commentSenderRole) of \(commentSenderEntity)")
+                                .foregroundColor(.white)
+                        }
+                        
+                    }
+                    .frame(width: geometry.size.width*0.8, height: geometry.size.height*0.8)
+                    Spacer()
+                }
+    //                .frame(height: geometry.size.height*0.25)
+            }
+        }
+        
+    }
+}
+struct FeedbackPage: View {
+    
+    
+    @State private var responseLike: [Feedback] = []
+    @State private var responseComment: [Feedback] = []
+    @State private var errorMessage: String?
     
     var body: some View {
         
@@ -41,6 +89,41 @@ struct FeedbackPage: View {
                             .font(.system(size: 20))
                         Spacer()
                     }
+                    .onAppear{
+                        let request = APIRequest()
+                        request.getRequest(endpoint: "/like") { result in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case .success(let data):
+                                    do {
+                                        let responseLikeData = try JSONDecoder().decode([Feedback].self, from: data)
+                                        self.responseLike = responseLikeData
+                                        
+                                    } catch {
+                                        print("Error decoding JSON: \(error)")
+                                    }
+                                case .failure(let error):
+                                    self.errorMessage = "Error: \(error)"
+                                }
+                            }
+                        }
+                        request.getRequest(endpoint: "/comment") { result in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case .success(let data):
+                                    do {
+                                        let responseCommentData = try JSONDecoder().decode([Feedback].self, from: data)
+                                        self.responseComment = responseCommentData
+                                        
+                                    } catch {
+                                        print("Error decoding JSON: \(error)")
+                                    }
+                                case .failure(let error):
+                                    self.errorMessage = "Error: \(error)"
+                                }
+                            }
+                        }
+                    }
                     Spacer().frame(height:30)
                     //Overview Section
                     HStack{
@@ -50,7 +133,8 @@ struct FeedbackPage: View {
                                 .resizable()
                                 .frame(width: 35, height: 30)
                                 .foregroundColor(Color(hex: "#FE97BF"))
-                            Text("24")
+                            
+                            Text(String(responseLike.count ?? 0))
                                 .foregroundColor(Color(hex: "#FE97BF"))
                         }
                         Spacer()
@@ -60,7 +144,7 @@ struct FeedbackPage: View {
                                 .resizable()
                                 .frame(width: 35, height: 30)
                                 .foregroundColor(Color(hex: "#B8CF88"))
-                            Text("2")
+                            Text(String(responseComment.count + 1 ?? 0))
                                 .foregroundColor(Color(hex: "#B8CF88"))
                         }
                         Spacer()
@@ -70,40 +154,23 @@ struct FeedbackPage: View {
                     Text("Love from Customers")
                         .fontWeight(.semibold)
                         .font(.system(size: 24))
-                    // one review item
-                    Group{
-                        ZStack{
-                            Rectangle()
-                                .foregroundColor(Color(hex:"#9E896A"))
-                                .frame(height: geometry.size.height*0.25)
-                                .cornerRadius(20)
-                            HStack{
-                                Spacer()
-                                VStack(alignment: .leading){
-                                    Text("Loved the freshness! Thanks for making this amazing squash!")
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
-                                        .multilineTextAlignment(.leading)
-                                    Spacer()
-                                    HStack{
-                                        Spacer()
-                                        Text("Customer of Stone Burner Restaurant")
-                                            .foregroundColor(.white)
-                                    }
-                                    
-                                }
-                                .frame(width: geometry.size.width*0.8, height: geometry.size.height*0.2)
-                                Spacer()
+                    VStack(spacing:10){
+                        if !responseComment.isEmpty {
+                            ForEach(responseComment, id: \.id) { comment in
+                                CommentView(commentContent: comment.message ?? "", commentSenderRole: comment.senderRole, commentSenderEntity: comment.senderEntity)
+                                    .frame(width: geometry.size.width*0.9, height: geometry.size.height*0.25)
                             }
-                            .frame(height: geometry.size.height*0.25)
+                        } else {
+                            
                         }
                     }
+                    
                     Spacer()
                         .frame(height: 50)
                     Text("Feedback from Restaurants")
                         .fontWeight(.semibold)
                         .font(.system(size: 24))
-                    // One review item
+                    // One Restaurant review item
                     Group{
                         ZStack{
                             Rectangle()

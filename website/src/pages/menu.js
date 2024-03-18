@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { fetchData } from './api/menu';
 
 import styles from './menu.module.css';
-import { FaPlus, FaMinus } from 'react-icons/fa';
+import { FaShoppingCart, FaPlus, FaMinus } from 'react-icons/fa';
 
 export async function getServerSideProps(context) {
   const menuItems = await fetchData("restaurant/menu");
@@ -40,34 +40,23 @@ function Modal({ isOpen, onClose, content }) {
   }
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+    <div className={styles.modalback} onClick={onClose}>
+      <div className={styles.modalcontent} onClick={e => e.stopPropagation()}>
         {content}
         <button onClick={onClose}>Close</button>
       </div>
+    </div>
+  );
+}
 
-      <style jsx>{`
-        .modal-backdrop {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-        }
-        .modal-content {
-          background: white;
-          padding: 20px;
-          border-radius: 4px;
-          max-width: 500px;
-          max-height: 80%;
-          overflow-y: auto;
-        }
-      `}</style>
+function Cart({ isOpen, onClose, content, isPressed }) {
+  return (
+    <div className={styles.cartback} onClick={onClose}>
+      <div className={styles.cartcontent} onClick={e => e.stopPropagation()}>
+        {/* {content} */}
+        <FaShoppingCart color="green" />
+        <button onClick={onClose}>Close</button>
+      </div>
     </div>
   );
 }
@@ -92,19 +81,6 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
   }, {})
 
   console.log("menuByType", menuByType)
-
-  const handleSelectItem = (event, selectedItem) => {
-    event.stopPropagation();
-    setSelectedItems((prevItems) => {
-      const isAlreadySelected = prevItems.some(item => item.id === selectedItem.id);
-
-      if (isAlreadySelected) {
-        return prevItems.filter(item => item.id !== selectedItem.id);
-      } else {
-        return [...prevItems, selectedItem];
-      }
-    });
-  };
 
   const [cartItems, setCartItems] = useState(new Map());
 
@@ -133,23 +109,6 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
       return updatedItems;
     });
   };
-  const handleAddItem = (item) => {
-    setCartItems(prevItems => {
-      const updatedItems = new Map(prevItems);
-      const existingItem = updatedItems.get(item.id);
-      updatedItems.set(item.id, { ...item, quantity: (existingItem ? existingItem.quantity + 1 : 1) });
-      return updatedItems;
-    });
-  };
-
-  const handleRemoveItem = (item) => {
-    setSelectedItems(selectedItems.map(item => {
-      if (item.id === id && item.count > 0) {
-        return { ...item, count: item.count - 1 };
-      }
-      return item;
-    }));
-  };
 
   const showItemDetails = (selectedProduce) => {
     setActiveProduce(selectedProduce);
@@ -162,7 +121,8 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
   };
 
   const submitOrder = () => {
-    Cookies.set('selectedItems', JSON.stringify(selectedItems));
+    console.log("submited order", cartItems)
+    Cookies.set('selectedItems', JSON.stringify(cartItems));
 
     router.push({
       pathname: '/order',
@@ -180,54 +140,57 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
           </ul>
         </div>
       </nav>
-      {Object.entries(menuByType).map(([type, items]) => (
-        <div key={type}>
-          <div className={styles.menutype}>{type}</div>
-          <div class={styles.divider}></div>
-          {items.map(item => {
-            const cartItem = cartItems.get(item.id);
-            const quantity = cartItem ? cartItem.quantity : 0;
-            return (
-              <div key={item.id} className={styles.itemcontainer}>
-                <div className={styles.iteminfo} >
-                  <div className={`${styles.dishname} ${styles.left}`}>{item.dishName}</div>
-                  <div className={`${styles.dishprice} ${styles.right}`}>${item.price}</div>
-                </div>
-                <div className={styles.description}>
-                  {item.ingredients.map((ingredient) => {
-                    if (ingredient.produce) {
-                      return (<span onClick={() => showItemDetails(ingredient)} style={{ color: 'green' }}>{ingredient.name}, </span>)
-                    } else {
-                      return (<span>{ingredient.name}, </span>)
-                    }
-                  }
-                  )}
-                </div>
-                <div className={styles.right}>
-                  {quantity ?
-                    <div className={styles.right}>
-                      <button className={styles.iconButton} onClick={() => removeFromCart(item.id)}>
-                        <FaMinus />
-                      </button>
-                      {quantity}
-                      <button className={styles.iconButton} onClick={() => addToCart(item)}>
-                        <FaPlus />
-                      </button>
-                    </div>
-                    :
-                    <button className={styles.addButton} onClick={() => addToCart(item)}>Add</button>
-                  }
-
-                </div>
-                <div class={styles.divider}></div>
-              </div>
-            );
-          })}
-        </div>
-      ))
-      }
       <div>
+        {Object.entries(menuByType).map(([type, items]) => (
+          <div key={type}>
+            <div className={styles.menutype}>{type}</div>
+            <div className={styles.divider}></div>
+            {items.map(item => {
+              const cartItem = cartItems.get(item.id);
+              const quantity = cartItem ? cartItem.quantity : 0;
+              return (
+                <div key={item.id} className={styles.itemcontainer}>
+                  <div className={styles.iteminfo} >
+                    <div className={`${styles.dishname} ${styles.left}`}>{item.dishName}</div>
+                    <div className={`${styles.dishprice} ${styles.right}`}>${item.price}</div>
+                  </div>
+                  <div className={styles.description}>
+                    {item.ingredients.map((ingredient) => {
+                      if (ingredient.produce) {
+                        return (<span onClick={() => showItemDetails(ingredient)} style={{ color: 'green' }}>{ingredient.name}, </span>)
+                      } else {
+                        return (<span>{ingredient.name}, </span>)
+                      }
+                    }
+                    )}
+                  </div>
+                  <div className={styles.right}>
+                    {quantity ?
+                      <div className={styles.right}>
+                        <button className={styles.iconButton} onClick={() => removeFromCart(item.id)}>
+                          <FaMinus />
+                        </button>
+                        {quantity}
+                        <button className={styles.iconButton} onClick={() => addToCart(item)}>
+                          <FaPlus />
+                        </button>
+                      </div>
+                      :
+                      <button className={styles.addButton} onClick={() => addToCart(item)}>Add</button>
+                    }
+
+                  </div>
+                  <div className={styles.divider}></div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <div >
         <h3>Cart Items</h3>
+
         {[...cartItems.values()].map(item => (
           <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <div>
@@ -240,7 +203,9 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
         ))}
       </div>
       <button className={styles.addButton} onClick={() => submitOrder()}>Place Order</button>
-
+      <div className={styles.carticon}>
+        <FaShoppingCart color="green" />
+      </div>
       <Modal isOpen={isModalOpen} onClose={closeModal} content={(
         <div>
           <p>{activeProduce?.produce?.originFarm}</p>

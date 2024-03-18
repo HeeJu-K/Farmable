@@ -163,7 +163,7 @@ struct Farmer_Profile: View {
     
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
             GeometryReader { geometry in
                 ScrollView {
                     VStack(alignment: .leading){
@@ -172,6 +172,7 @@ struct Farmer_Profile: View {
                             NavigationLink(destination: EditProfileInfo(isEditingProfileInfo: $isEditingProfileInfo), isActive: $isEditingProfileInfo){
                                 collapsedProfileView
                             }
+                            .hidden()
                             Spacer(minLength: 25)
                             Divider()
                         }
@@ -209,6 +210,8 @@ struct Farmer_Profile: View {
                                     Spacer().frame(width: 10)
                                 }
                             }
+                            .navigationBarHidden(true)
+                            .navigationBarBackButtonHidden(true)
                         }
                         Spacer().frame(height:20)
                         HStack{
@@ -277,7 +280,7 @@ struct Farmer_Profile: View {
                 }
             }
         }
-    }
+//    }
 }
 
 struct Farmer_Profile_Previews: PreviewProvider {
