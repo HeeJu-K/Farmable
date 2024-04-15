@@ -3,10 +3,27 @@
     font-family: 'Arial', sans-serif;
 }
 
+.restaurant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.restaurantTitle {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.restaurantDescription {
+    font-size: 12px;
+    text-align: center;
+}
+
 .navbar {
     /* background-color: #333; */
+    padding-top: 10px;
     color: #36A63A;
-    padding: 7px 0;
+    padding: 20px 0;
 }
 
 .tabs-container {
@@ -70,8 +87,8 @@
 .addButton {
     color: #36A63A;
     background-color: transparent;
-    border: solid 1px #36A63A;
-    border-radius: 12px;
+    border: solid 0.25px #36a63a8b;
+    border-radius: 6px;
     padding: 3px 6px;
 }
 
@@ -83,8 +100,10 @@
 }
 
 .divider {
-    padding: 10px 0;
-    flex: 0 0 20px;
+    padding: 16px 12px;
+    flex: 0 0 10px;
+    align-items: center;
+    justify-content: center;
 }
 
 .divider::after {
@@ -95,11 +114,27 @@
     background-color: rgb(225, 225, 225);
 }
 
-.cart-icon {
+.cartbutton {
     position: sticky;
     bottom: 20px;
     right: 20px;
-    z-index: 10;
+    z-index: 1000;
+}
+
+.carticon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    border: 0.5px solid #36A63A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carticon img {
+    width: 75px;
+    height: 75px;
 }
 
 .modalback {
@@ -118,12 +153,17 @@
 .modalcontent {
     background: white;
     padding: 20px;
-    border-radius: 4px;
-    max-width: 500px;
+    border-radius: 10px;
+    /* max-width: 500px; */
+    max-width: 80%;
     max-height: 80%;
     overflow-y: auto;
 }
 
+.modalTitle {
+    font-size: 30px;
+    font-weight: bold;
+}
 
 .cartback {
     position: fixed;

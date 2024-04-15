@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { useRouter } from 'next/router';
+import getConfig from 'next/config';
 import Cookies from 'js-cookie';
 
 import { fetchData } from './api/menu';
@@ -41,9 +42,11 @@ function Modal({ isOpen, onClose, content }) {
 
   return (
     <div className={styles.modalback} onClick={onClose}>
+      
       <div className={styles.modalcontent} onClick={e => e.stopPropagation()}>
+      <button className={styles.addButton} style={{marginLeft:'auto'}} onClick={onClose}>x</button>
         {content}
-        <button onClick={onClose}>Close</button>
+        
       </div>
     </div>
   );
@@ -55,7 +58,7 @@ function Cart({ isOpen, onClose, content, isPressed }) {
       <div className={styles.cartcontent} onClick={e => e.stopPropagation()}>
         {/* {content} */}
         <FaShoppingCart color="green" />
-        <button onClick={onClose}>Close</button>
+        <button className={styles.addButton} onClick={onClose}>Close</button>
       </div>
     </div>
   );
@@ -65,10 +68,28 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
 
   const router = useRouter();
 
+  const { publicRuntimeConfig } = getConfig();
+  const [restaurantName, setRestaurantName] = useState("the Grange");
+
   const [selectedItems, setSelectedItems] = useState([]);
 
   const [activeProduce, setActiveProduce] = useState();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+
+  const currentTime = new Date().getTime();
+
+  const getTimedifference = (harvestTime) => {
+    const currentTime = new Date().getTime();
+    const timeDifference = currentTime - harvestTime;
+    const millisecondsInHour = 1000 * 60 * 60;
+    const millisecondsInDay = millisecondsInHour * 24;
+
+    // Calculate the time difference in days and hours
+    const daysDifference = Math.floor(timeDifference / millisecondsInDay);
+    const hoursDifference = Math.floor((timeDifference % millisecondsInDay) / millisecondsInHour);
+    return daysDifference.toString() + " days and " + hoursDifference.toString() + " hours ago"
+  }
 
   Cookies.set('userList', JSON.stringify(userList));
 
@@ -112,12 +133,20 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
 
   const showItemDetails = (selectedProduce) => {
     setActiveProduce(selectedProduce);
-    setIsModalOpen(true);
+    setIsDetailsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeDetailsModal = () => {
+    setIsDetailsModalOpen(false);
     setActiveProduce(null);
+  };
+
+  const showCartItems = () => {
+    setIsCartModalOpen(true);
+  };
+
+  const closeCartModal = () => {
+    setIsCartModalOpen(false);
   };
 
   const submitOrder = () => {
@@ -131,6 +160,16 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
 
   return (
     <div className={styles.container}>
+      <div className={styles.restaurant}>
+        <div className={styles.restaurantTitle} style={{ fontFamily: "Courier, Courier New, monospace" }}>{restaurantName}</div>
+        <img
+          src="/theGrangeLogo.png"
+          alt="restaurant logo"
+          style={{ width: '75px', height: '75px' }}
+        />
+        <div className={styles.restaurantDescription} style={{ fontFamily: "Courier, Courier New, monospace" }}>Farm-To-Table Restaurant <br /> &  <br /> General Store in Duvall</div>
+        <div className={styles.restaurantDescription} style={{ fontSize: "10px" }}>15611 Main St NE, Duvall, WA 98019</div>
+      </div>
       <nav className={styles.navbar}>
         <div className={styles.tabsContainer}>
           <ul className={styles.tabs}>
@@ -167,11 +206,11 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
                   <div className={styles.right}>
                     {quantity ?
                       <div className={styles.right}>
-                        <button className={styles.iconButton} onClick={() => removeFromCart(item.id)}>
+                        <button className={styles.addButton} onClick={() => removeFromCart(item.id)}>
                           <FaMinus />
                         </button>
                         {quantity}
-                        <button className={styles.iconButton} onClick={() => addToCart(item)}>
+                        <button className={styles.addButton} onClick={() => addToCart(item)}>
                           <FaPlus />
                         </button>
                       </div>
@@ -188,28 +227,34 @@ export default function Menu({ menuItems, produceList, menuItemsWithProduceInfo,
         ))}
       </div>
 
-      <div >
-        <h3>Cart Items</h3>
-
-        {[...cartItems.values()].map(item => (
-          <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <div>
-              <div>{item.dishName}</div>
-              <div>{item.price}</div>
-              <div>Quantity: {item.quantity}</div>
-            </div>
-            <button onClick={() => removeFromCart(item.id)}>Remove from Cart</button>
-          </div>
-        ))}
-      </div>
+      <Modal isOpen={isCartModalOpen} onClose={closeCartModal}
+        content={(
+          <div>
+            <h3>Cart Items</h3>
+            
+            {[...cartItems.values()].map(item => (
+              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <div>
+                  <div>{item.dishName}</div>
+                  <div>${item.price}</div>
+                  <div>Quantity: {item.quantity}</div>
+                </div>
+                {/* <button onClick={() => removeFromCart(item.id)}>Remove from Cart</button> */}
+              </div>
+            ))}
+            <button className={styles.addButton} onClick={() => submitOrder()}>Place Order</button>
+          </div>)}
+      />
       <button className={styles.addButton} onClick={() => submitOrder()}>Place Order</button>
-      <div className={styles.carticon}>
-        <FaShoppingCart color="green" />
+      <div className={styles.cartbutton} onClick={() => showCartItems()}>
+        <div className={styles.carticon}>
+          <FaShoppingCart color="#36A63A" />
+        </div>
       </div>
-      <Modal isOpen={isModalOpen} onClose={closeModal} content={(
+      <Modal isOpen={isDetailsModalOpen} onClose={closeDetailsModal} content={(
         <div>
-          <p>{activeProduce?.produce?.originFarm}</p>
-          <p>Harvest Time: {activeProduce?.produce?.harvestTime}</p>
+          <p className={styles.modalTitle}>{activeProduce?.produce?.originFarm}</p>
+          <p>Harvest Time: {getTimedifference(activeProduce?.produce?.harvestTime)}</p>
           <p>About the Farm: {userList[0].teamDescription}</p>
         </div>
       )} />

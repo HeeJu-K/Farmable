@@ -184,21 +184,36 @@ struct PopUpView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack{
+                
+                Spacer().frame(height:15)
                 Text(dishItem.dishName)
-                Text(String(dishItem.price))
-                Text(dishItem.description)
-                Toggle("Active?", isOn: $isActive)
-                HStack{
-                    Text("Menu Type")
-                    Spacer()
-                    DropdownView(selectedMenuType: $menuType)
-                        .frame(width: geometry.size.width*0.6)
+                    .fontWeight(.semibold)
+                    .font(.system(size: 28))
+                Spacer().frame(height:10)
+                Group{
+                    Text("$"+String(dishItem.price))
+    //                    .fontWeight(.semibold)
+                        .font(.system(size: 20))
+                    Spacer().frame(height:10)
+                    Text(dishItem.description)
+                        .font(.system(size: 16))
+                    Spacer().frame(height:10)
+                    Toggle("Active?", isOn: $isActive)
+                    Spacer().frame(height:10)
+                    HStack{
+                        Text("Menu Type")
+                        Spacer()
+                        DropdownView(selectedMenuType: $menuType)
+                            .frame(width: geometry.size.width*0.6)
+                    }
+                    Spacer().frame(height:10)
                 }
-                Button("save") {
+                Spacer().frame(height:60)
+                Button("close") {
                 }
-                    .padding(5)
+                    .frame(width: 75, height:40)
                     .background(Color.green)
-                    .cornerRadius(5)
+                    .cornerRadius(10)
                     .foregroundColor(.white)
             }
         }
@@ -243,7 +258,7 @@ struct AddItemPopUpView: View {
                     DropdownView(selectedMenuType: $menuType)
                         .frame(width: geometry.size.width*0.6)
                 }
-                Button("save") {
+                Button("add") {
                     let newDishItem = DishItem(
                         id: "",
                         dishName: dishName,
@@ -266,7 +281,7 @@ struct AddItemPopUpView: View {
                 }
                 .frame(width: 75, height:40)
                 .background(Color.green)
-                .cornerRadius(20)
+                .cornerRadius(10)
                 .foregroundColor(.white)
                 
             }
@@ -285,9 +300,9 @@ struct DropdownView: View {
             HStack{
                 Button("Create") {}
                     .padding(5)
-                    .foregroundColor(.white)
-                    .background(RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.green))
+                    .foregroundColor(.black)
+                    .overlay(RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.black))
                 ForEach(menuTypes, id:\.self) {menuType in
                     Button(menuType) {selectedMenuType = menuType}
                         .padding(5)

@@ -48,18 +48,25 @@ struct Farmer_Profile: View {
 
     var collapsedProfileView: some View {
        
-        HStack (spacing: 30){
+        HStack{
             Spacer()
-            Rectangle()
-                .frame(width:75, height: 75)
-                .cornerRadius(33)
             VStack{
-                Text(farmerFirstName + " " + farmerLastName)
-                    .font(.system(size: 20))
-                Text("Address")
+                Image(systemName: "person")
+                    .resizable()
+                    .foregroundColor(.green)
+                    .frame(width:75, height: 75)
+//                Rectangle()
+//                    .frame(width:75, height: 75)
+//                    .cornerRadius(33)
+                HStack{
+                    Text(farmerFirstName + " " + farmerLastName)
+                        .font(.system(size: 20))
+//                    Text("Address")
+                }
             }
-            Image(systemName: "chevron.right")
             Spacer()
+            Image(systemName: "chevron.right")
+            Spacer().frame(width: 10)
         }
         .onTapGesture {
             self.isEditingProfileInfo = true
@@ -172,7 +179,7 @@ struct Farmer_Profile: View {
                             NavigationLink(destination: EditProfileInfo(isEditingProfileInfo: $isEditingProfileInfo), isActive: $isEditingProfileInfo){
                                 collapsedProfileView
                             }
-                            .hidden()
+//                            .hidden()
                             Spacer(minLength: 25)
                             Divider()
                         }
@@ -257,26 +264,6 @@ struct Farmer_Profile: View {
                                 farmDescriptionView}
                         }
                     }
-                    Group{
-                        Text("See how your produce is being loved!")
-                        HStack{
-                            VStack{
-                                Text("Number of Love")
-                                Text("192")
-                            }
-                            VStack{
-                                Text("Wants to hear more")
-                                Text("192")
-                            }
-                        }
-                        if !responseData.isEmpty {
-                            Text("Feedback from customers:")
-                            Text(responseData[0].farmerFeedback ?? "")
-                        } else {
-                            Text("No feedback available")
-                        }
-                    }
-                    
                 }
             }
         }
